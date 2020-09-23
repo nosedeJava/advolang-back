@@ -20,16 +20,13 @@ public class User {
 
     private String username;
 
-    private String email;
-
     private String password;
 
     @DBRef
     private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String email, String password) {
+    public User(String username, String password) {
         this.username = username;
-        this.email = email;
         this.password = password;
     }
 }
