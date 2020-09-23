@@ -20,13 +20,20 @@ public class User {
 
     private String username;
 
+    private String firstName;
+
+    private String lastName;
+
     private String password;
 
     @DBRef
     private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String password) {
+    public User(String firstName, String lastName, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.password = password;
+
     }
 }
