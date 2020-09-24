@@ -1,4 +1,4 @@
-package advolang.app.security.jwt;
+package advolang.app.services.security.jwt;
 
 import java.io.IOException;
 

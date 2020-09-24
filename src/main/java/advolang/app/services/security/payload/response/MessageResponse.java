@@ -1,4 +1,4 @@
-package advolang.app.payload.response;
+package advolang.app.services.security.payload.response;
 
 public class MessageResponse {
     private String message;

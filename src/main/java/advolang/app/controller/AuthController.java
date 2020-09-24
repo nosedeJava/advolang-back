@@ -1,53 +1,51 @@
 package advolang.app.controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import advolang.app.models.ERole;
 import advolang.app.models.Role;
 import advolang.app.models.User;
-import advolang.app.payload.request.LoginRequest;
-import advolang.app.payload.request.SignupRequest;
-import advolang.app.payload.response.JwtResponse;
-import advolang.app.payload.response.MessageResponse;
+import advolang.app.services.security.payload.request.LoginRequest;
+import advolang.app.services.security.payload.request.SignupRequest;
+import advolang.app.services.security.payload.response.JwtResponse;
+import advolang.app.services.security.payload.response.MessageResponse;
 import advolang.app.persistance.RoleRepository;
 import advolang.app.persistance.UserRepository;
-import advolang.app.security.jwt.JwtUtils;
-import advolang.app.security.services.UserDetailsImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import advolang.app.services.security.jwt.JwtUtils;
+import advolang.app.services.security.services.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
+    final AuthenticationManager authenticationManager;
 
-    @Autowired
-    UserRepository userRepository;
+    final UserRepository userRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
+    final RoleRepository roleRepository;
 
-    @Autowired
-    PasswordEncoder encoder;
+    final PasswordEncoder encoder;
 
-    @Autowired
-    JwtUtils jwtUtils;
+    final JwtUtils jwtUtils;
+
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {

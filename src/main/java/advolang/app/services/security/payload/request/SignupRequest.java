@@ -1,4 +1,4 @@
-package advolang.app.payload.request;
+package advolang.app.services.security.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

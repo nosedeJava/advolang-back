@@ -1,8 +1,8 @@
-package advolang.app.security;
+package advolang.app.services.security;
 
-import advolang.app.security.jwt.AuthEntryPointJwt;
-import advolang.app.security.jwt.AuthTokenFilter;
-import advolang.app.security.services.UserDetailsServiceImpl;
+import advolang.app.services.security.jwt.AuthEntryPointJwt;
+import advolang.app.services.security.jwt.AuthTokenFilter;
+import advolang.app.services.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
