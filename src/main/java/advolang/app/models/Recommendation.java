@@ -1,4 +1,4 @@
-package advolang.app.model;
+package advolang.app.models;
 
 /**
  * Recommendation

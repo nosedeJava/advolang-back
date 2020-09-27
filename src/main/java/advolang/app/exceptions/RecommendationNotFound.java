@@ -1,4 +1,4 @@
-package advolang.app.exception;
+package advolang.app.exceptions;
 
 /**
  * RecommendationNotFound

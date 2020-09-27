@@ -1,7 +1,7 @@
 package advolang.app.controller;
 
-import advolang.app.exception.RecommendationNotFound;
-import advolang.app.model.Recommendation;
+import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.models.Recommendation;
 import advolang.app.services.RecommendationService;
 
 import java.util.List;

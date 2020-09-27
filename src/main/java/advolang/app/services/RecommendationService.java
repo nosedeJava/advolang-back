@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import advolang.app.exception.RecommendationNotFound;
-import advolang.app.model.Recommendation;
+import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.models.Recommendation;
 
 /**
  * RecommendationService

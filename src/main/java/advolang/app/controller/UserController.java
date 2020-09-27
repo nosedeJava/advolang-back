@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import advolang.app.exception.RecommendationNotFound;
-import advolang.app.exception.UserBadRequest;
-import advolang.app.exception.UserNotFound;
-import advolang.app.model.Recommendation;
-import advolang.app.model.User;
+import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.exceptions.UserBadRequest;
+import advolang.app.exceptions.UserNotFound;
+import advolang.app.models.Recommendation;
+import advolang.app.models.User;
 import advolang.app.services.UserService;
 
 /**

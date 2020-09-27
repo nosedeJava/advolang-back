@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import advolang.app.exception.RecommendationNotFound;
-import advolang.app.exception.UserBadRequest;
-import advolang.app.exception.UserNotFound;
-import advolang.app.model.User;
-import advolang.app.model.Recommendation;
+import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.exceptions.UserBadRequest;
+import advolang.app.exceptions.UserNotFound;
+import advolang.app.models.Recommendation;
+import advolang.app.models.User;
 
 /**
  * UserService
