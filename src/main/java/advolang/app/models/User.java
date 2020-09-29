@@ -18,22 +18,21 @@ public class User {
     @Id
     private String id;
 
+    private String fullName;
+
     private String username;
 
-    private String firstName;
-
-    private String lastName;
+    private String email;
 
     private String password;
 
     @DBRef
     private Set<Role> roles = new HashSet<>();
 
-    public User(String firstName, String lastName, String username, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(String fullName, String email, String username, String password) {
+        this.fullName = fullName;
+        this.email = email;
         this.username = username;
         this.password = password;
-
     }
 }

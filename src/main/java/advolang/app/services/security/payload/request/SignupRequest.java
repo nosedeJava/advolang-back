@@ -12,12 +12,11 @@ import java.util.Set;
 public class SignupRequest {
     private String username;
 
-    private String firstName;
+    private String email;
 
-    private String lastName;
+    private String fullName;
 
     private Set<String> roles;
 
     private String password;
-
 }

@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -76,8 +76,8 @@ public class AuthController {
         }
 
         // Create new user's account
-        User user = new User(signUpRequest.getFirstName(),
-                signUpRequest.getLastName(),
+        User user = new User(signUpRequest.getFullName(),
+                signUpRequest.getEmail(),
                 signUpRequest.getUsername(),
                 encoder.encode(signUpRequest.getPassword()));
 

@@ -1,67 +1,43 @@
 package advolang.app.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import advolang.app.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import advolang.app.exceptions.RecommendationNotFound;
-import advolang.app.exceptions.UserBadRequest;
 import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
 import advolang.app.models.User;
-import advolang.app.services.UserService;
 
 /**
  * UserController
  */
-@RestController
+@Controller
+@CrossOrigin("*")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    final UserService userService;
 
-
-    /**
-     * Metodo que permite la creación de usuarios nuevos dentro del sistema.
-     * A esto le falta tener en cuenta la sección de seguridad, así que añadirá a futuro en cuanto se haga una unión entre las dos ramas.
-     * @param user  Información completa del usuario, esto debería incluir toda la información que sea necesaria para su creación, siendo esta recibida en un JSON y mapeada a un objeto User.
-     * @return  Retorna un código de éxito o de error según sea el caso.
-     */
-    @RequestMapping(value = "/users", method = RequestMethod.POST)
-    public ResponseEntity<?> createAccount(@RequestBody User user) {
-        try {
-            userService.createAccount(user);
-            return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        } catch (UserBadRequest badRequest) {
-            Logger.getLogger(UserController.class.getName()).log(Level.FINE, "User error", badRequest);
-            return new ResponseEntity<>("Error - Email in use", HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Unexcepted error", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
-
-
 
     /**
      * Metodo que permite la obtención de la información relacionada a un usuario en especifico.
-     * @param id    Identificador del usuario que desea suscribirse, se espera sea algún tipo de cadena que permita su identificación.
+     * @param username    Identificador del usuario que desea suscribirse, se espera sea algún tipo de cadena que permita su identificación.
      * @return  Retorna la información solicitada o un código de error según sea el caso.
      */
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable("id") String id) {
+    @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUser(@PathVariable("username") String username) {
         try {
-            User user = userService.getUser(id);
+            Optional<User> user = userService.getUserByUsername(username);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (UserNotFound notFound) {
             return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);
