@@ -1,14 +1,14 @@
-package advolang.app.controller;
+package advolang.app.controllers;
 
 import advolang.app.models.ERole;
 import advolang.app.models.Role;
 import advolang.app.models.User;
+import advolang.app.repository.UserRepository;
 import advolang.app.services.security.payload.request.LoginRequest;
 import advolang.app.services.security.payload.request.SignupRequest;
 import advolang.app.services.security.payload.response.JwtResponse;
 import advolang.app.services.security.payload.response.MessageResponse;
 import advolang.app.persistance.RoleRepository;
-import advolang.app.persistance.UserRepository;
 import advolang.app.services.security.jwt.JwtUtils;
 import advolang.app.services.security.services.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;

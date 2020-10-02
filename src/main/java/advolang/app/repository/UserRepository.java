@@ -1,4 +1,4 @@
-package advolang.app.persistance;
+package advolang.app.repository;
 
 import advolang.app.models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;

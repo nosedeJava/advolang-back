@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -26,14 +25,6 @@ public class User {
     private String email;
 
     private String password;
-
-    private List<Recommendation> saved;
-
-    private String description;
-
-    private String userImage;
-
-    private List<String> subscriptions;
 
     @DBRef
     private Set<Role> roles = new HashSet<>();

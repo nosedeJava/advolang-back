@@ -1,7 +1,7 @@
 package advolang.app.services.security.services;
 
 import advolang.app.models.User;
-import advolang.app.persistance.UserRepository;
+import advolang.app.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

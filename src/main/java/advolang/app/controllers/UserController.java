@@ -1,9 +1,7 @@
-package advolang.app.controller;
+package advolang.app.controllers;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import advolang.app.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -21,6 +19,7 @@ import advolang.app.models.User;
  */
 @Controller
 @CrossOrigin("*")
+@RequestMapping("/api")
 public class UserController {
 
     final UserService userService;

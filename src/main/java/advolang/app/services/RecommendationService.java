@@ -1,44 +1,26 @@
 package advolang.app.services;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
 import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.models.Recommendation;
 
-/**
- * RecommendationService
- */
-@Service
-public class RecommendationService {
+import java.util.List;
+import java.util.Map;
 
-	public void addRecommendation(String language, Recommendation recommendation) {
-	}
+public interface RecommendationService {
 
-	public List<Recommendation> getRecommendations(String language, Map<String, String> parameters) {
-		return null;
-	}
-	
-	public List<Recommendation> getReportedRecommendations(String language) {
-		return null;		
-	}
+    void addRecommendation(String language, Recommendation recommendation);
 
-	public Recommendation getSpecificRecommendation(String language, long id) throws RecommendationNotFound{
-		return null;
-	}
+    List<Recommendation> getRecommendations(String language, Map<String, String> parameters);
 
-	public List<String> getCategories(String language) {
-		return null;
-	}
+    List<Recommendation> getReportedRecommendations(String language);
 
-	public void addCategory(String language, String category) {
-	}
+    Recommendation getSpecificRecommendation(String language, long id) throws RecommendationNotFound;
 
-	public void addSubscription(String language, String userId) {
-	}
+    List<String> getCategories(String language);
 
-	public void removeSubscription(String language, String userId) {
-	}
+    void addCategory(String language, String category);
+
+    void addSubscription(String language, String userId);
+
+    void removeSubscription(String language, String userId);
 }
