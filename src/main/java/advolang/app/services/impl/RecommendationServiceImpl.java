@@ -2,8 +2,10 @@ package advolang.app.services.impl;
 
 import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.exceptions.UserNotFound;
+import advolang.app.models.Category;
 import advolang.app.models.Recommendation;
 import advolang.app.models.User;
+import advolang.app.repository.CategoryRepository;
 import advolang.app.repository.RecomRepository;
 import advolang.app.services.RecommendationService;
 
@@ -11,37 +13,66 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
-	
-	@Autowired
-	private RecomRepository recomRepository;
-	
+
+    @Autowired
+    private RecomRepository recomRepository;
+
+    @Autowired
+    private CategoryRepository catRepo;
+
     @Override
-    public void addRecommendation(Recommendation recommendation) {
-		this.recomRepository.save(recommendation);
-    }
-    
-    @Override
-    public List<Recommendation> getUserRecommendations(User creator) throws UserNotFound{
-    	return this.recomRepository.findByCreator(creator);
-    }
-    
-    @Override
-    public List<Recommendation> getRecommendations(String language, Map<String, String> parameters) {
-        return null;
+    public void addRecommendation(Recommendation recommendation) throws RecommendationNotFound {
+        try {
+            this.recomRepository.save(recommendation);
+            for (Category category : recommendation.getCategories()) {
+                Category tempCategory = catRepo.findByValue(category.getValue());
+                tempCategory.setPopularity(tempCategory.getPopularity()+1);
+                catRepo.save(tempCategory);
+            }
+        } catch (Exception e) {
+            throw new RecommendationNotFound("Failed to create a recommendations");
+        }
     }
 
     @Override
-    public List<Recommendation> getReportedRecommendations(String language) {
-        return null;
+    public List<Recommendation> getUserRecommendations(User creator) throws UserNotFound {
+        try {
+            return this.recomRepository.findByCreator(creator);
+        } catch (Exception e) {
+            throw new UserNotFound("No recommendations found for this user");
+        }
+
+    }
+
+    @Override
+    public List<Recommendation> getRecommendations(String language, List<String> values) throws RecommendationNotFound {
+        try {
+            List<Recommendation> recommendations = recomRepository.findByLanguage(language);
+            return recommendations;
+        } catch (Exception e) {
+            throw new RecommendationNotFound("Failed query on recommendations by language");
+        }
+    }
+
+    @Override
+    public List<Recommendation> getReportedRecommendations(String language) throws RecommendationNotFound {
+        try {
+            return recomRepository.findByReportedIsTrueAndLanguage(language);
+        } catch (Exception e) {
+            throw new RecommendationNotFound("Failed query on reported recommendations by language");
+        }
     }
 
     @Override
     public Recommendation getSpecificRecommendation(String language, String id) throws RecommendationNotFound {
-        return null;
+        try {
+            return recomRepository.findById(id).get();
+        } catch (Exception e) {
+            throw new RecommendationNotFound("Recommendation not found");
+        }
     }
 
     @Override

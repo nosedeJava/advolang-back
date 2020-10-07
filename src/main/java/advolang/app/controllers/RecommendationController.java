@@ -5,7 +5,6 @@ import advolang.app.models.Recommendation;
 import advolang.app.services.RecommendationService;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,14 +31,14 @@ public class RecommendationController {
      * @return  Returns the list of recommendations requested, under the parameters that have been received.
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.GET)
-    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam Map<String, String> parameters) {
+    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam List<String> categories) {
         try{
-            // If a request is made to the reported recommendations a special parameter is received, taking into account flag.
-            if(parameters.containsKey("reported") && parameters.get("reported").compareTo("true")==0){
+            // Si se realiza una petición a las recomendaciones reportadas se recibe un parametro especial, teniendo en cuenta de flag.
+            if(categories.contains("reported")){
                 List<Recommendation> listReportedRecommendation = recommendationService.getReportedRecommendations(language);
                 return new ResponseEntity<>(listReportedRecommendation, HttpStatus.OK);
             }else{
-                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, parameters);
+                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, categories);
                 return new ResponseEntity<>(listRecommendation, HttpStatus.OK);
             }
         } catch(Exception e){

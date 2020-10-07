@@ -27,7 +27,17 @@ public interface RecomRepository extends MongoRepository<Recommendation, String>
 	 * @return A list with all recommendations of the user
 	 */
 	public List<Recommendation> findByCreator(User creator);
-	
+	/**
+	 * 
+	 * @param language
+	 * @return A list with all recommendations from a language
+	 */
+	public List<Recommendation> findByLanguage(String language);
+	/**
+	 * 
+	 * @return A list with all reported recommendations from a language 
+	 */
+	public List<Recommendation> findByReportedIsTrueAndLanguage(String language);
 	/**
 	 * Method to delete a recommendation
 	 * 

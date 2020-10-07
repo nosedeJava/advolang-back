@@ -1,7 +1,6 @@
 package advolang.app.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import advolang.app.services.RecommendationService;
 import advolang.app.services.UserService;
@@ -16,7 +15,6 @@ import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
 import advolang.app.models.User;
-import advolang.app.repository.RecomRepository;
 
 /**
  * UserController
