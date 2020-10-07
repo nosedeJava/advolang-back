@@ -32,14 +32,14 @@ public class RecommendationController {
      * @return  Returns the list of recommendations requested, under the parameters that have been received.
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.GET)
-    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam List<String> values) {
+    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam List<String> categories) {
         try{
             // Si se realiza una petición a las recomendaciones reportadas se recibe un parametro especial, teniendo en cuenta de flag.
-            if(values.contains("reported")){
+            if(categories.contains("reported")){
                 List<Recommendation> listReportedRecommendation = recommendationService.getReportedRecommendations(language);
                 return new ResponseEntity<>(listReportedRecommendation, HttpStatus.OK);
             }else{
-                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, values);
+                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, categories);
                 return new ResponseEntity<>(listRecommendation, HttpStatus.OK);
             }
         } catch(Exception e){
@@ -70,7 +70,7 @@ public class RecommendationController {
      * @return  Returns the information of the requested recommendation or error as the case may be.
      */
     @RequestMapping(value = "/{language}/recommendations/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getSpecificRecommendation(@PathVariable("language") String language, @PathVariable("id") long id){
+    public ResponseEntity<?> getSpecificRecommendation(@PathVariable("language") String language, @PathVariable("id") String id){
         try {
             Recommendation specificRecommendation = recommendationService.getSpecificRecommendation(language, id);
             return new ResponseEntity<>(specificRecommendation, HttpStatus.OK);

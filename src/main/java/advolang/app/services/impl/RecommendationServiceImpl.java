@@ -14,34 +14,46 @@ import java.util.List;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
-	
-	@Autowired
-	private RecomRepository recomRepository;
-	
+
+    @Autowired
+    private RecomRepository recomRepository;
+
     @Override
     public void addRecommendation(Recommendation recommendation) {
-		this.recomRepository.save(recommendation);
-    }
-    
-    @Override
-    public List<Recommendation> getUserRecommendations(User creator) throws UserNotFound{
-    	return this.recomRepository.findByCreator(creator);
-    }
-    
-    @Override
-    public List<Recommendation> getRecommendations(String language, List<String> values) {
-        List<Recommendation> recommendations = recomRepository.findAll();
-        return recommendations;
+        this.recomRepository.save(recommendation);
     }
 
     @Override
-    public List<Recommendation> getReportedRecommendations(String language) {
-        return null;
+    public List<Recommendation> getUserRecommendations(User creator) throws UserNotFound {
+        return this.recomRepository.findByCreator(creator);
     }
 
     @Override
-    public Recommendation getSpecificRecommendation(String language, long id) throws RecommendationNotFound {
-        return null;
+    public List<Recommendation> getRecommendations(String language, List<String> values) throws RecommendationNotFound{
+        try {
+            List<Recommendation> recommendations= recomRepository.findByLanguage(language);
+            return recommendations;
+        } catch (Exception e) {
+            throw new RecommendationNotFound("Failed query on recommendations by language");
+        }
+    }
+
+    @Override
+    public List<Recommendation> getReportedRecommendations(String language) throws RecommendationNotFound {
+        try {
+            return recomRepository.findByReportedIsTrueAndLanguage(language);
+        } catch (Exception e) {
+            throw new RecommendationNotFound("Failed query on reported recommendations by language");
+        }
+    }
+
+    @Override
+    public Recommendation getSpecificRecommendation(String language, String id) throws RecommendationNotFound {
+        try {
+            return recomRepository.findById(id).get();
+        } catch (Exception e) {
+            throw new RecommendationNotFound("Recommendation not found");
+        }
     }
 
     @Override

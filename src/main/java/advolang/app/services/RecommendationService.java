@@ -30,14 +30,14 @@ public interface RecommendationService {
      * @param parameters
      * @return
      */
-    public List<Recommendation> getRecommendations(String language, List<String> values);
+    public List<Recommendation> getRecommendations(String language, List<String> values) throws RecommendationNotFound;
 
     /**
      * 
      * @param language
      * @return
      */
-    public List<Recommendation> getReportedRecommendations(String language);
+    public List<Recommendation> getReportedRecommendations(String language) throws RecommendationNotFound;
     
     /**
      * 
@@ -46,7 +46,7 @@ public interface RecommendationService {
      * @return
      * @throws RecommendationNotFound
      */
-    public Recommendation getSpecificRecommendation(String language, long id) throws RecommendationNotFound;
+    public Recommendation getSpecificRecommendation(String language, String id) throws RecommendationNotFound;
 
     /**
      * 
