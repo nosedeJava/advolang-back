@@ -40,7 +40,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public Recommendation getSpecificRecommendation(String language, long id) throws RecommendationNotFound {
+    public Recommendation getSpecificRecommendation(String language, String id) throws RecommendationNotFound {
         return null;
     }
 

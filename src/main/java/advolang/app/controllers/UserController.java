@@ -52,24 +52,24 @@ public class UserController {
 
     /**
      * Esto tiene que arreglarse.
-     * @param id
+     * @param username
      * @return
      */
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> updateUser(@PathVariable("id") String id) {
+    @RequestMapping(value = "/users/{username}", method = RequestMethod.PATCH)
+    public ResponseEntity<?> updateUser(@PathVariable("username") String username) {
         return null;
     }
 
 
     /**
      * Method that allows to obtain the recommendations saved by a user.
-     * @param id    Identifier of the user who wishes to subscribe, it is expected to be some kind of string that allows its identification.
+     * @param username    Identifier of the user who wishes to subscribe, it is expected to be some kind of string that allows its identification.
      * @return  Returns the list of recommendations saved by the user in question or returns an error code depending on the case.
      */
-    @RequestMapping(value = "/users/{id}/saved-recommendations", method = RequestMethod.GET)
-    public ResponseEntity<?> getSavedRecommendations(@PathVariable("id") String id) {
+    @RequestMapping(value = "/users/{username}/saved-recommendations", method = RequestMethod.GET)
+    public ResponseEntity<?> getSavedRecommendations(@PathVariable("username") String username) {
         try {
-            List<Recommendation> listSavedRecommendations = userService.getSavedRecommendations(id);
+            List<Recommendation> listSavedRecommendations = userService.getSavedRecommendations(username);
             return new ResponseEntity<>(listSavedRecommendations, HttpStatus.OK);
         } catch (UserNotFound notFound) {
             return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);            
@@ -83,8 +83,8 @@ public class UserController {
      * @param recommendationId  Identifier of the recommendation to be saved within the user's list.
      * @return  Returns a success or error code as appropriate.
      */
-    @RequestMapping(value = "/users/{id}/saved-recommendations", method = RequestMethod.POST)
-    public ResponseEntity<?> saveRecommendation(@PathVariable("id") String userId, @RequestParam long recommendationId) {
+    @RequestMapping(value = "/users/{username}/saved-recommendations", method = RequestMethod.POST)
+    public ResponseEntity<?> saveRecommendation(@PathVariable("username") String userId, @RequestParam String recommendationId) {
         try {
             userService.saveRecommendation(userId, recommendationId);
             return new ResponseEntity<>("Success", HttpStatus.OK);
@@ -100,8 +100,8 @@ public class UserController {
      * @param recommendationId  Identifier of the recommendation itself, which you wish to remove from the list.
      * @return  Returns a success code or an error code, depending on the case.
      */
-    @RequestMapping(value = "/users/{id}/saved-recommendations", method = RequestMethod.DELETE)
-    public ResponseEntity<?> removeSavedRecommendation(@PathVariable("id") String userId, @RequestParam long recommendationId) {
+    @RequestMapping(value = "/users/{username}/saved-recommendations", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeSavedRecommendation(@PathVariable("username") String userId, @RequestParam("recommendationId") String recommendationId) {
         try {
             userService.removeSavedRecommendation(userId, recommendationId);
             return new ResponseEntity<>("Success", HttpStatus.OK);
@@ -121,8 +121,8 @@ public class UserController {
      * @param userId    Identifier of the user on whom you want to make the request.
      * @return  Returns the recommendations created by that user or an error as the case may be.
      */
-    @RequestMapping(value = "/users/{id}/recommendations", method = RequestMethod.GET)
-    public ResponseEntity<?> getUserRecommendations(@PathVariable("id") String userId) {
+    @RequestMapping(value = "/users/{username}/recommendations", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserRecommendations(@PathVariable("username") String userId) {
     	    	
         try {
         	User providedUser = this.userService.getUserById(userId);
