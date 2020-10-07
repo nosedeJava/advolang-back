@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
@@ -30,8 +29,9 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
     
     @Override
-    public List<Recommendation> getRecommendations(String language, Map<String, String> parameters) {
-        return null;
+    public List<Recommendation> getRecommendations(String language, List<String> values) {
+        List<Recommendation> recommendations = recomRepository.findAll();
+        return recommendations;
     }
 
     @Override

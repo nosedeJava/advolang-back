@@ -47,8 +47,10 @@ public class Recommendation {
     
     private List<Category> categories;
 
+    private Boolean reported;
+
     public Recommendation(User creator, String title, String description, String language,
-    		String level, Date creationDate, String thumbnail) {
+    		String level, Date creationDate, String thumbnail, Boolean reported) {
     	
     	this.creator = creator;
     	this.title = title;

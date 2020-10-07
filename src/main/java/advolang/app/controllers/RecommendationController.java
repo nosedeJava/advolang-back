@@ -34,14 +34,14 @@ public class RecommendationController {
      * @return  Retorna la lista de recomendaciones solicitada, bajo los parametros que se hayan recibido.
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.GET)
-    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam Map<String, String> parameters) {
+    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam List<String> values) {
         try{
             // Si se realiza una petición a las recomendaciones reportadas se recibe un parametro especial, teniendo en cuenta de flag.
-            if(parameters.containsKey("reported") && parameters.get("reported").compareTo("true")==0){
+            if(values.contains("reported")){
                 List<Recommendation> listReportedRecommendation = recommendationService.getReportedRecommendations(language);
                 return new ResponseEntity<>(listReportedRecommendation, HttpStatus.OK);
             }else{
-                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, parameters);
+                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, values);
                 return new ResponseEntity<>(listRecommendation, HttpStatus.OK);
             }
         } catch(Exception e){

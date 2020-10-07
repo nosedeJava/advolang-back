@@ -30,7 +30,7 @@ public interface RecommendationService {
      * @param parameters
      * @return
      */
-    public List<Recommendation> getRecommendations(String language, Map<String, String> parameters);
+    public List<Recommendation> getRecommendations(String language, List<String> values);
 
     /**
      * 
