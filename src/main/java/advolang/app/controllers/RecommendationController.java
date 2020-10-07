@@ -33,7 +33,7 @@ public class RecommendationController {
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.GET)
     public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam List<String> categories) {
         try{
-            // Si se realiza una petición a las recomendaciones reportadas se recibe un parametro especial, teniendo en cuenta de flag.
+            //If a request is made to the reported recommendations a special parameter is received, taking into account flag.
             if(categories.contains("reported")){
                 List<Recommendation> listReportedRecommendation = recommendationService.getReportedRecommendations(language);
                 return new ResponseEntity<>(listReportedRecommendation, HttpStatus.OK);
