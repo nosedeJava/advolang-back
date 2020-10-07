@@ -33,9 +33,9 @@ public class UserController {
 	private RecommendationService recommendationService;
     
     /**
-     * Metodo que permite la obtención de la información relacionada a un usuario en especifico.
-     * @param username    Identificador del usuario que desea suscribirse, se espera sea algún tipo de cadena que permita su identificación.
-     * @return  Retorna la información solicitada o un código de error según sea el caso.
+     * Method that allows to obtain the information related to a specific user.
+     * @param username    Identifier of the user who wishes to subscribe, it is expected to be some kind of string that allows its identification.
+     * @return  Returns the requested information or an error code as the case may be.
      */
     @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
     public ResponseEntity<?> getUser(@PathVariable("username") String username) {
@@ -62,9 +62,9 @@ public class UserController {
 
 
     /**
-     * Metodo que permite la obtención de las recomendaciones guardadas por un usuario.
-     * @param id    Identificador del usuario que desea suscribirse, se espera sea algún tipo de cadena que permita su identificación.
-     * @return  Retorna la lista de recomendaciones guardadas por el usuario en cuestión o devuelve un código de error dependiendo del caso.
+     * Method that allows to obtain the recommendations saved by a user.
+     * @param id    Identifier of the user who wishes to subscribe, it is expected to be some kind of string that allows its identification.
+     * @return  Returns the list of recommendations saved by the user in question or returns an error code depending on the case.
      */
     @RequestMapping(value = "/users/{id}/saved-recommendations", method = RequestMethod.GET)
     public ResponseEntity<?> getSavedRecommendations(@PathVariable("id") String id) {
@@ -79,9 +79,9 @@ public class UserController {
     }
 
     /**
-     * Este metodo permite el agregar una nueva recomendación a la lista de recomendaciones guardadas de un usuario.
-     * @param recommendationId  Identificador de la recomendación que se desea guardar dentro de la lista del usuario.
-     * @return  Retorna un código de éxito o uno de error según sea el caso.
+     * This method allows you to add a new recommendation to a user's saved recommendation list.
+     * @param recommendationId  Identifier of the recommendation to be saved within the user's list.
+     * @return  Returns a success or error code as appropriate.
      */
     @RequestMapping(value = "/users/{id}/saved-recommendations", method = RequestMethod.POST)
     public ResponseEntity<?> saveRecommendation(@PathVariable("id") String userId, @RequestParam long recommendationId) {
@@ -95,10 +95,10 @@ public class UserController {
 
 
     /**
-     * Metodo que permite remover una recomendación guardada de la lista del usuario.
-     * @param userId  Identificador del usuario que desea eliminar la recomendación de su lista.
-     * @param recommendationId  Identificador de la recomendación en sí, que se desea remover de la lista.
-     * @return  Retorna un código de éxito o uno de error según sea el caso.
+     * Method that allows to remove a saved recommendation from the user's list.
+     * @param userId  Identifier of the user who wants to remove the recommendation from his list.
+     * @param recommendationId  Identifier of the recommendation itself, which you wish to remove from the list.
+     * @return  Returns a success code or an error code, depending on the case.
      */
     @RequestMapping(value = "/users/{id}/saved-recommendations", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeSavedRecommendation(@PathVariable("id") String userId, @RequestParam long recommendationId) {
@@ -117,9 +117,9 @@ public class UserController {
 
 
     /**
-     * Obtiene las recomendaciones creadas por un usuario especifico.
-     * @param userId    Identificador del usuario sobre el cual se desea realizar la petición.
-     * @return  Retorna las recomendaciones creadas por dicho usuario o un error según sea el caso.
+     * Get the recommendations created by a specific user.
+     * @param userId    Identifier of the user on whom you want to make the request.
+     * @return  Returns the recommendations created by that user or an error as the case may be.
      */
     @RequestMapping(value = "/users/{id}/recommendations", method = RequestMethod.GET)
     public ResponseEntity<?> getUserRecommendations(@PathVariable("id") String userId) {
