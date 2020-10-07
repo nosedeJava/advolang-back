@@ -46,7 +46,7 @@ public interface RecommendationService {
      * @return
      * @throws RecommendationNotFound
      */
-    public Recommendation getSpecificRecommendation(String language, long id) throws RecommendationNotFound;
+    public Recommendation getSpecificRecommendation(String language, String id) throws RecommendationNotFound;
 
     /**
      * 

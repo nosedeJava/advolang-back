@@ -22,4 +22,6 @@ public interface UserRepository extends MongoRepository<User, String> {
 	 * @return
 	 */
     Boolean existsByUsername(String username);
+
+
 }

@@ -70,7 +70,7 @@ public class RecommendationController {
      * @return  Returns the information of the requested recommendation or error as the case may be.
      */
     @RequestMapping(value = "/{language}/recommendations/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getSpecificRecommendation(@PathVariable("language") String language, @PathVariable("id") long id){
+    public ResponseEntity<?> getSpecificRecommendation(@PathVariable("language") String language, @PathVariable("id") String id){
         try {
             Recommendation specificRecommendation = recommendationService.getSpecificRecommendation(language, id);
             return new ResponseEntity<>(specificRecommendation, HttpStatus.OK);
