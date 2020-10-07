@@ -11,32 +11,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * RecommendationsController
  */
 @Controller
+@CrossOrigin("*")
+@RequestMapping("/api")
 public class RecommendationController {
 
 	@Autowired
 	private RecommendationService recommendationService;
 
     /**
-     * Este metodo retorna las recomendaciones ligadas a un idioma (Ej: Español, English, etc).
-     * Sin embargo, dichas recomendaciones pueden ser solicitadas con filtros.
-     * @param language  Identificador del idioma sobre el cual se hace la petición.
-     * @param parameters    Parametros de filtrado.
-     * @return  Retorna la lista de recomendaciones solicitada, bajo los parametros que se hayan recibido.
+     * This method returns the recommendations linked to a language (ex: Spanish, English, etc).
+     * However, such recommendations can be requested with filters.
+     * @param language  Identifier of the language in which the request is made.
+     * @param parameters    Filter parameters.
+     * @return  Returns the list of recommendations requested, under the parameters that have been received.
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.GET)
     public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam Map<String, String> parameters) {
         try{
-            // Si se realiza una petición a las recomendaciones reportadas se recibe un parametro especial, teniendo en cuenta de flag.
+            // If a request is made to the reported recommendations a special parameter is received, taking into account flag.
             if(parameters.containsKey("reported") && parameters.get("reported").compareTo("true")==0){
                 List<Recommendation> listReportedRecommendation = recommendationService.getReportedRecommendations(language);
                 return new ResponseEntity<>(listReportedRecommendation, HttpStatus.OK);
@@ -50,9 +48,9 @@ public class RecommendationController {
     }
 
     /**
-     * Metodo que permite el registro de una nueva recomendación sobre un idioma.
-     * @param language  Identificador del idioma sobre el cual se realiza la petición.
-     * @return  Retorna un código de éxito o de error según sea el caso.
+     * Method that allows the registration of a new recommendation about a language.
+     * @param language  Identifier of the language on which the request is made.
+     * @return  Returns a success or error code as appropriate.
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.POST)
     public ResponseEntity<?> addRecommendation(@PathVariable("language") String language, @RequestBody Recommendation recommendation){
@@ -66,10 +64,10 @@ public class RecommendationController {
 
 
     /**
-     * Metodo que recibe la solicitud de la información relacionada a un id de recomendación.
-     * @param language  Lenguaje en el que se encuentra la recomendación solicitada.
-     * @param id    Identificador de la recomendación en sí.
-     * @return  Retorna la información de la recomendación solicitada o error según sea el caso.
+     * Method that receives the request for information related to a referral id.
+     * @param language  Language in which the requested referral is located.
+     * @param id    Identifier of the recommendation itself.
+     * @return  Returns the information of the requested recommendation or error as the case may be.
      */
     @RequestMapping(value = "/{language}/recommendations/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getSpecificRecommendation(@PathVariable("language") String language, @PathVariable("id") long id){
@@ -100,9 +98,9 @@ public class RecommendationController {
 
 
     /**
-     * Este metodo es el encargado de retornar las categorias relacionadas a un idioma en especifico.
-     * @param language  Identificador del idioma sobre el cual se realiza la petición.
-     * @return  Retorna la lista de categorias o un error si llegase a ocurrir.
+     * This method is in charge of returning the categories related to a specific language.
+     * @param language  Identifier of the language on which the request is made.
+     * @return  Returns the list of categories or an error if it occurs.
      */
     @RequestMapping(value = "/{language}/categories", method = RequestMethod.GET)
     public ResponseEntity<?> getCategories(@PathVariable("language") String language) {
@@ -116,10 +114,10 @@ public class RecommendationController {
 
 
     /**
-     * Metodo encargado de recibir las peticiones de creación de una categoria sobre un idioma especifico.
-     * @param language  Identificador del idioma sobre el cual se realiza la petición.
-     * @param category  Categoría en cuestión, en este caso se espera una cadena que contenga el "nombre" de la categoria.
-     * @return  Retorna un código de éxito o un código de error según sea el caso.
+     * Method in charge of receiving the requests of creation of a category on a specific language.
+     * @param language  Identifier of the language on which the request is made.
+     * @param category  Category in question, in this case a string containing the "name" of the category is expected.
+     * @return  Returns a success code or an error code as the case may be.
      */
     @RequestMapping(value = "/{language}/categories", method = RequestMethod.POST)
     public ResponseEntity<?> addCategory(@PathVariable("language") String language, @RequestParam("category") String category) {
@@ -133,10 +131,10 @@ public class RecommendationController {
 
 
     /**
-     * Este metodo realiza el registro de una nueva suscripción de un usuario hacia un idioma especifico.
-     * @param language  Identificador del idioma sobre el cual se realiza la petición.
-     * @param userId    Identificador del usuario que desea suscribirse, se espera sea algún tipo de cadena que permita su identificación.
-     * @return  Devuelve un código de éxito o un código de error según sea el caso.
+     * This method performs the registration of a new subscription of a user to a specific language.
+     * @param language  Identifier of the language on which the request is made.
+     * @param userId    Identifier of the user that wishes to subscribe, it is expected to be some kind of string that allows its identification.
+     * @return  Returns a success code or an error code as the case may be.
      */
     @RequestMapping(value = "/{language}/subscription", method = RequestMethod.POST)
     public ResponseEntity<?> addSubscription(@PathVariable("language") String language, @RequestParam("user") String userId) {
@@ -151,10 +149,10 @@ public class RecommendationController {
 
 
     /**
-     * Metodo encargado de remover la suscripción de un usuario hacia un idioma en especifico.
-     * @param language  Identificador del idioma sobre el cual se realiza la petición.
-     * @param userId    Identificador del usuario que desea suscribirse, se espera sea algún tipo de cadena que permita su identificación.
-     * @return  Devuelve un código de éxito o un código de error según sea el caso.
+     * Method of removing a user's subscription to a specific language.
+     * @param language  Identifier of the language on which the request is made.
+     * @param userId    Identifier of the user that wishes to subscribe, it is expected to be some kind of string that allows its identification.
+     * @return  Returns a success code or an error code as the case may be.
      */
     @RequestMapping(value = "/{language}/subscription", method = RequestMethod.GET)
     public ResponseEntity<?> removeSubscription(@PathVariable("language") String language, @RequestParam("user") String userId) {
