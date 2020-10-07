@@ -3,14 +3,16 @@ package advolang.app.controllers;
 import advolang.app.models.ERole;
 import advolang.app.models.Role;
 import advolang.app.models.User;
-import advolang.app.repository.UserRepository;
 import advolang.app.services.security.payload.request.LoginRequest;
 import advolang.app.services.security.payload.request.SignupRequest;
 import advolang.app.services.security.payload.response.JwtResponse;
 import advolang.app.services.security.payload.response.MessageResponse;
-import advolang.app.persistance.RoleRepository;
+import advolang.app.repository.RoleRepository;
+import advolang.app.services.UserService;
 import advolang.app.services.security.jwt.JwtUtils;
 import advolang.app.services.security.services.UserDetailsImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,24 +31,23 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    final AuthenticationManager authenticationManager;
+	
+	@Autowired
+    private AuthenticationManager authenticationManager;
 
-    final UserRepository userRepository;
+	@Autowired
+    private UserService userService;
 
-    final RoleRepository roleRepository;
+	@Autowired
+    private RoleRepository roleRepository;
 
-    final PasswordEncoder encoder;
+	@Autowired
+	private PasswordEncoder encoder;
 
-    final JwtUtils jwtUtils;
+	@Autowired
+    private JwtUtils jwtUtils;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.encoder = encoder;
-        this.jwtUtils = jwtUtils;
-    }
-
+	
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
@@ -69,7 +70,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+        if (userService.checkExistingUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Username is already taken!"));
@@ -112,7 +113,7 @@ public class AuthController {
         }
 
         user.setRoles(roles);
-        userRepository.save(user);
+        userService.saveUser(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

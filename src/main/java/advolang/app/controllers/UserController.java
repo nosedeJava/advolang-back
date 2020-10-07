@@ -3,7 +3,10 @@ package advolang.app.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import advolang.app.services.RecommendationService;
 import advolang.app.services.UserService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +16,7 @@ import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
 import advolang.app.models.User;
+import advolang.app.repository.RecomRepository;
 
 /**
  * UserController
@@ -21,13 +25,13 @@ import advolang.app.models.User;
 @CrossOrigin("*")
 @RequestMapping("/api")
 public class UserController {
-
-    final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
+	
+	@Autowired
+    private UserService userService;
+    
+    @Autowired
+	private RecommendationService recommendationService;
+    
     /**
      * Metodo que permite la obtención de la información relacionada a un usuario en especifico.
      * @param username    Identificador del usuario que desea suscribirse, se espera sea algún tipo de cadena que permita su identificación.
@@ -36,7 +40,7 @@ public class UserController {
     @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
     public ResponseEntity<?> getUser(@PathVariable("username") String username) {
         try {
-            Optional<User> user = userService.getUserByUsername(username);
+            User user = userService.getUserByUsername(username);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (UserNotFound notFound) {
             return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);
@@ -119,13 +123,24 @@ public class UserController {
      */
     @RequestMapping(value = "/users/{id}/recommendations", method = RequestMethod.GET)
     public ResponseEntity<?> getUserRecommendations(@PathVariable("id") String userId) {
+    	    	
         try {
-            List<Recommendation> listUserRecommendations = userService.getUserRecommendations(userId);
-            return new ResponseEntity<>(listUserRecommendations, HttpStatus.OK);
-        } catch (UserNotFound userNotFound) {
-            return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        	User providedUser = this.userService.getUserById(userId);
+        
+        	if(providedUser == null) {
+        		throw(new UserNotFound("This user does not exist"));
+
+        	}
+        	return new ResponseEntity<>(this.recommendationService.getUserRecommendations(providedUser), HttpStatus.OK);
+
+        } 
+        catch (UserNotFound userNotFound) {
+            
+        	return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);
+        } 
+        catch (Exception e) {
+        
+        	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

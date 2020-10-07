@@ -1,26 +1,79 @@
 package advolang.app.services;
 
 import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
+import advolang.app.models.User;
 
 import java.util.List;
 import java.util.Map;
 
 public interface RecommendationService {
+	
+	/**
+	 * Method to add a new recommendation to the db
+	 * @param recommendation The recommendation that is going to be saved
+	 */
+    public void addRecommendation(Recommendation recommendation);
+    
+    /**
+     * Method to get all recommendations created by an specific user
+     * @param user2 Creator of recommendations
+     * @return A list with all recommendations
+     * @throws UserNotFound If the user does not exist
+     */
+	public List<Recommendation> getUserRecommendations(User user) throws UserNotFound;
 
-    void addRecommendation(String language, Recommendation recommendation);
+    /**
+     * 
+     * @param language
+     * @param parameters
+     * @return
+     */
+    public List<Recommendation> getRecommendations(String language, Map<String, String> parameters);
 
-    List<Recommendation> getRecommendations(String language, Map<String, String> parameters);
+    /**
+     * 
+     * @param language
+     * @return
+     */
+    public List<Recommendation> getReportedRecommendations(String language);
+    
+    /**
+     * 
+     * @param language
+     * @param id
+     * @return
+     * @throws RecommendationNotFound
+     */
+    public Recommendation getSpecificRecommendation(String language, long id) throws RecommendationNotFound;
 
-    List<Recommendation> getReportedRecommendations(String language);
+    /**
+     * 
+     * @param language
+     * @return
+     */
+    public List<String> getCategories(String language);
+    
+    /**
+     * 
+     * @param language
+     * @param category
+     */
+    public void addCategory(String language, String category);
+    
+    /**
+     * 
+     * @param language
+     * @param userId
+     */
+    public void addSubscription(String language, String userId);
+    
+    /**
+     * 
+     * @param language
+     * @param userId
+     */
+    public void removeSubscription(String language, String userId);
 
-    Recommendation getSpecificRecommendation(String language, long id) throws RecommendationNotFound;
-
-    List<String> getCategories(String language);
-
-    void addCategory(String language, String category);
-
-    void addSubscription(String language, String userId);
-
-    void removeSubscription(String language, String userId);
 }

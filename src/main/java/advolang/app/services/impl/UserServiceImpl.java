@@ -6,6 +6,8 @@ import advolang.app.models.Recommendation;
 import advolang.app.models.User;
 import advolang.app.repository.UserRepository;
 import advolang.app.services.UserService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,15 +16,45 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    final UserRepository userRepository;
+	@Autowired
+    private UserRepository userRepository;
+	
+	@Override
+	public void saveUser(User user) {
+		this.userRepository.save(user);
+	}
+	
+	@Override
+	public boolean checkExistingUsername(String username) {
+		return this.userRepository.existsByUsername(username);
+	}
+	
+	@Override
+	public User getUserById(String userId) throws UserNotFound {
+		
+		Optional <User> user = this.userRepository.findById(userId);
+		
+		try {
+			return user.get();
+		}
+		
+		catch (Exception e) {
+			return null;
+		}
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	}
 
     @Override
-    public Optional<User> getUserByUsername(String username) throws UserNotFound {
-        return userRepository.findByUsername(username);
+    public User getUserByUsername(String username) throws UserNotFound {
+        Optional<User> user = this.userRepository.findByUsername(username);
+        
+        try {
+			return user.get();
+		}
+		
+		catch (Exception e) {
+			return null;
+		}
     }
 
     @Override
@@ -39,9 +71,6 @@ public class UserServiceImpl implements UserService {
     public void removeSavedRecommendation(String userId, long recommendationId) throws UserNotFound, RecommendationNotFound {
 
     }
-
-    @Override
-    public List<Recommendation> getUserRecommendations(String userId) throws UserNotFound {
-        return null;
-    }
+    
 }
+
