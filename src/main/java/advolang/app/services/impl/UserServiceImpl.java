@@ -21,13 +21,18 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void saveUser(User user) {
-		userRepository.save(user);
+		this.userRepository.save(user);
+	}
+	
+	@Override
+	public boolean checkExistingUsername(String username) {
+		return this.userRepository.existsByUsername(username);
 	}
 	
 	@Override
 	public User getUserById(String userId) throws UserNotFound {
 		
-		Optional <User> user = userRepository.findById(userId);
+		Optional <User> user = this.userRepository.findById(userId);
 		
 		try {
 			return user.get();
@@ -41,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) throws UserNotFound {
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = this.userRepository.findByUsername(username);
         
         try {
 			return user.get();

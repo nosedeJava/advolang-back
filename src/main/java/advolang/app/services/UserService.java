@@ -17,6 +17,13 @@ public interface UserService {
 	public void saveUser(User user);
 	
 	/**
+	 * Method to check if an existing user has the given username
+	 * @param username Username to check
+	 * @return True or false depending if the username is already taken
+	 */
+	public boolean checkExistingUsername(String username);
+
+	/**
 	 * Method to get an user by the given id
 	 * @param userId The Id of the user
 	 * @return The user if exists

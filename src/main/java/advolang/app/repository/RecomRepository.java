@@ -1,6 +1,5 @@
 package advolang.app.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +26,8 @@ public interface RecomRepository extends MongoRepository<Recommendation, String>
 	 * @param creator User 
 	 * @return A list with all recommendations of the user
 	 */
-	public List<Recommendation> findByCreator (User creator);
-
+	public List<Recommendation> findByCreator(User creator);
+	
 	/**
 	 * Method to delete a recommendation
 	 * 
