@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 			throw new RecommendationNotFound("Error - Recommendation not found");
 		}
 		// Adding a recommendation to a user's saved recommendations
-		user.getSavedRecommendations().add(recommendation);
+		if(!user.getSavedRecommendations().contains(recommendation)) user.getSavedRecommendations().add(recommendation);
 		this.userRepository.save(user);
     }
 
