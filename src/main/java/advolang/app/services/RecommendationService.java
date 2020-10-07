@@ -6,7 +6,6 @@ import advolang.app.models.Recommendation;
 import advolang.app.models.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface RecommendationService {
 	
@@ -14,7 +13,7 @@ public interface RecommendationService {
 	 * Method to add a new recommendation to the db
 	 * @param recommendation The recommendation that is going to be saved
 	 */
-    public void addRecommendation(Recommendation recommendation);
+    public void addRecommendation(Recommendation recommendation) throws RecommendationNotFound;
     
     /**
      * Method to get all recommendations created by an specific user
