@@ -40,18 +40,18 @@ public interface UserService {
 
 	/**
 	 * Method to get all recommendations that a specific user have been save
-	 * @param id Id of the user
+	 * @param username Id of the user
 	 * @return A list with all recommendations
 	 * @throws UserNotFound If the user does not exist
 	 */
-	public List<Recommendation> getSavedRecommendations(String id) throws UserNotFound;
+	public List<Recommendation> getSavedRecommendations(String username) throws UserNotFound;
 	
 	/**
 	 * Method to save a recommendation to an user
 	 * @param userId Id of the user
 	 * @param recommendationId Id of the recommendation
 	 */
-    public void saveRecommendation(String userId, long recommendationId);
+    public void saveRecommendation(String userId, String recommendationId) throws UserNotFound, RecommendationNotFound;
 
     /**
      * Method to delete a recommendation for an user
@@ -60,7 +60,7 @@ public interface UserService {
      * @throws UserNotFound If the user does not exist
      * @throws RecommendationNotFound If the recommendation does noy exist
      */
-    public void removeSavedRecommendation(String userId, long recommendationId) throws UserNotFound, RecommendationNotFound;
+    public void removeSavedRecommendation(String userId, String recommendationId) throws UserNotFound, RecommendationNotFound;
 
 
 }
