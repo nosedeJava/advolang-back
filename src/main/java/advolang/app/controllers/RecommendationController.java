@@ -7,6 +7,7 @@ import advolang.app.services.RecommendationService;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,11 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class RecommendationController {
 
-    final RecommendationService recommendationService;
-
-    public RecommendationController(RecommendationService recommendationService) {
-        this.recommendationService = recommendationService;
-    }
+	@Autowired
+	private RecommendationService recommendationService;
 
     /**
      * Este metodo retorna las recomendaciones ligadas a un idioma (Ej: Español, English, etc).
@@ -59,7 +57,7 @@ public class RecommendationController {
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.POST)
     public ResponseEntity<?> addRecommendation(@PathVariable("language") String language, @RequestBody Recommendation recommendation){
         try {
-            recommendationService.addRecommendation(language, recommendation);
+            recommendationService.addRecommendation(recommendation);
             return new ResponseEntity<>("Created", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Unexpected error", HttpStatus.BAD_REQUEST);
