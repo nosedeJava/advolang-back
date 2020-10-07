@@ -28,7 +28,7 @@ public class User {
 
     private String password;
 
-    private List<Recommendation> saved;
+    private List<Recommendation> savedRecommendations;
 
     @DBRef
     private Set<Role> roles = new HashSet<>();
@@ -41,8 +41,8 @@ public class User {
     }
 
     public List<Recommendation> getSavedRecommendations() {
-        return this.saved;
+        return this.savedRecommendations;
     }
 
-    public void setSavedRecommendations(List<Recommendation> savedRecommendations) { this.saved = savedRecommendations; }
+    public void setSavedRecommendations(List<Recommendation> savedRecommendations) { this.savedRecommendations = savedRecommendations; }
 }
