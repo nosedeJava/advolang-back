@@ -40,7 +40,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public List<Recommendation> getUserRecommendations(User creator) throws UserNotFound {
         try {
-            return this.recomRepository.findByCreator(creator);
+            return this.recomRepository.findByCreator(creator.getUsername());
         } catch (Exception e) {
             throw new UserNotFound("No recommendations found for this user");
         }

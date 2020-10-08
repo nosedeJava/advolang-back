@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import advolang.app.models.Recommendation;
@@ -26,7 +27,9 @@ public interface RecomRepository extends MongoRepository<Recommendation, String>
 	 * @param creator User 
 	 * @return A list with all recommendations of the user
 	 */
-	public List<Recommendation> findByCreator(User creator);
+	@Query("{ 'creator.username' : ?0 } }")
+	public List<Recommendation> findByCreator(String username);
+
 	/**
 	 * 
 	 * @param language

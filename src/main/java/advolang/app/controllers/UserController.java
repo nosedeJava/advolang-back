@@ -123,8 +123,8 @@ public class UserController {
     public ResponseEntity<?> getUserRecommendations(@PathVariable("username") String userId) {
     	    	
         try {
-        	User providedUser = this.userService.getUserById(userId);
-        
+        	User providedUser = this.userService.getUserByUsername(userId);
+
         	if(providedUser == null) {
         		throw(new UserNotFound("This user does not exist"));
 
