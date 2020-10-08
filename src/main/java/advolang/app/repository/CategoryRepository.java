@@ -7,5 +7,7 @@ import advolang.app.models.Category;
 
 @Repository
 public interface CategoryRepository extends MongoRepository<Category,String>{
-    public Category findByValue(String value);
+    Category findByValue(String value);
+
+    Boolean existsByValue(String value);
 }
