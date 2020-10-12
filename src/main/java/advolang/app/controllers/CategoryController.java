@@ -44,7 +44,7 @@ public class CategoryController {
     @GetMapping("/categoryList")
     public ResponseEntity<?> getCategoryList(){
         try {
-            return new ResponseEntity<>(categoryService.getListCategory(), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.ACCEPTED);
         }catch (Exception e){
             return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
         }
