@@ -7,10 +7,7 @@ import advolang.app.services.impl.CategoryServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @CrossOrigin("*")
@@ -41,6 +38,15 @@ public class CategoryController {
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(new UserBadRequest("Error in post"), HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @GetMapping("/categoryList")
+    public ResponseEntity<?> getCategoryList(){
+        try {
+            return new ResponseEntity<>(categoryService.getListCategory(), HttpStatus.ACCEPTED);
+        }catch (Exception e){
+            return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
         }
     }
 }

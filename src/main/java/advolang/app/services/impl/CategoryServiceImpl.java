@@ -5,6 +5,9 @@ import advolang.app.repository.CategoryRepository;
 import advolang.app.services.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -17,5 +20,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void createCategory(Category category) {
         categoryRepository.save(category);
+    }
+
+    @Override
+    public List<String> getListCategory() {
+        List<String> categories = new ArrayList<>();
+        categoryRepository.findAll().forEach(category -> {
+            categories.add(category.getValue());
+        });
+        return categories;
     }
 }
