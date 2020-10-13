@@ -16,9 +16,6 @@ import java.util.List;
  * Recommendation
  */
 @Data
-@Getter
-@Setter
-@ToString
 @Document(collection = "recommendations")
 public class Recommendation {
 	

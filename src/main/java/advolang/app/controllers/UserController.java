@@ -2,6 +2,7 @@ package advolang.app.controllers;
 
 import java.util.List;
 
+import advolang.app.repository.UserRepository;
 import advolang.app.services.RecommendationService;
 import advolang.app.services.UserService;
 
@@ -29,6 +30,9 @@ public class UserController {
     
     @Autowired
 	private RecommendationService recommendationService;
+
+    @Autowired
+    private UserRepository userRepository;
     
     /**
      * Method that allows to obtain the information related to a specific user.
@@ -116,21 +120,17 @@ public class UserController {
 
     /**
      * Get the recommendations created by a specific user.
-     * @param userId    Identifier of the user on whom you want to make the request.
+     * @param username Identifier of the user on whom you want to make the request.
      * @return  Returns the recommendations created by that user or an error as the case may be.
      */
     @RequestMapping(value = "/users/{username}/recommendations", method = RequestMethod.GET)
-    public ResponseEntity<?> getUserRecommendations(@PathVariable("username") String userId) {
+    public ResponseEntity<?> getUserRecommendations(@PathVariable("username") String username) {
     	    	
         try {
-        	User providedUser = this.userService.getUserByUsername(userId);
-
-        	if(providedUser == null) {
-        		throw(new UserNotFound("This user does not exist"));
-
-        	}
-        	return new ResponseEntity<>(this.recommendationService.getUserRecommendations(providedUser), HttpStatus.OK);
-
+            if (!userRepository.existsByUsername(username)){
+                throw new UserNotFound("User not found");
+            }
+        	return new ResponseEntity<>(this.recommendationService.getUserRecommendations(username), HttpStatus.OK);
         } 
         catch (UserNotFound userNotFound) {
             

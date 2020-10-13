@@ -21,7 +21,7 @@ public interface RecommendationService {
      * @return A list with all recommendations
      * @throws UserNotFound If the user does not exist
      */
-	public List<Recommendation> getUserRecommendations(User user) throws UserNotFound;
+	public List<Recommendation> getUserRecommendations(String creator) throws UserNotFound;
 
     /**
      * 

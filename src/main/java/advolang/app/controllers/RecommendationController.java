@@ -53,6 +53,7 @@ public class RecommendationController {
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.POST)
     public ResponseEntity<?> addRecommendation(@PathVariable("language") String language, @RequestBody Recommendation recommendation){
+        System.out.println(recommendation.toString());
         try {
             recommendationService.addRecommendation(recommendation);
             return new ResponseEntity<>("Created", HttpStatus.CREATED);

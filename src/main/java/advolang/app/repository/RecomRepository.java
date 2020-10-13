@@ -24,8 +24,8 @@ public interface RecomRepository extends MongoRepository<Recommendation, String>
 	 * Method to get all recommendations of an specific user
 	 * @return A list with all recommendations of the user
 	 */
-	@Query("{ 'creator.username' : ?0 } }")
-	List<Recommendation> findByCreator(String username);
+	@Query(value = "{'creator' : ?0 }")
+	List<Recommendation> findByCreator(String creator);
 
 	/**
 	 * 
