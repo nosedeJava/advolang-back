@@ -25,7 +25,7 @@ public class Recommendation {
     @Id
     private String id;
 
-    private User creator;
+    private String creator;
     
     private String title;
     
@@ -49,9 +49,9 @@ public class Recommendation {
 
     private Boolean reported;
 
-    public Recommendation(User creator, String title, String description, String language,
+    public Recommendation(String creator, String title, String description, String language,
     		String level, Date creationDate, String thumbnail, Boolean reported) {
-    	
+
     	this.creator = creator;
     	this.title = title;
     	this.description = description;
@@ -62,7 +62,4 @@ public class Recommendation {
     	this.scores = new ArrayList<Score>();
     	this.categories = new ArrayList<Category>();
     }
-    
-    
-    
 }
