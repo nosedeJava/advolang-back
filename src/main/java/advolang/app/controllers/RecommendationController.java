@@ -27,7 +27,6 @@ public class RecommendationController {
      * This method returns the recommendations linked to a language (ex: Spanish, English, etc).
      * However, such recommendations can be requested with filters.
      * @param language  Identifier of the language in which the request is made.
-     * @param parameters    Filter parameters.
      * @return  Returns the list of recommendations requested, under the parameters that have been received.
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.GET)
@@ -48,12 +47,10 @@ public class RecommendationController {
 
     /**
      * Method that allows the registration of a new recommendation about a language.
-     * @param language  Identifier of the language on which the request is made.
      * @return  Returns a success or error code as appropriate.
      */
-    @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.POST)
-    public ResponseEntity<?> addRecommendation(@PathVariable("language") String language, @RequestBody Recommendation recommendation){
-        System.out.println(recommendation.toString());
+    @RequestMapping(value = "/recommendations", method = RequestMethod.POST)
+    public ResponseEntity<?> addRecommendation(@RequestBody Recommendation recommendation){
         try {
             recommendationService.addRecommendation(recommendation);
             return new ResponseEntity<>("Created", HttpStatus.CREATED);

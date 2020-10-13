@@ -125,7 +125,6 @@ public class UserController {
      */
     @RequestMapping(value = "/users/{username}/recommendations", method = RequestMethod.GET)
     public ResponseEntity<?> getUserRecommendations(@PathVariable("username") String username) {
-    	    	
         try {
             if (!userRepository.existsByUsername(username)){
                 throw new UserNotFound("User not found");
@@ -133,11 +132,9 @@ public class UserController {
         	return new ResponseEntity<>(this.recommendationService.getUserRecommendations(username), HttpStatus.OK);
         } 
         catch (UserNotFound userNotFound) {
-            
         	return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);
         } 
         catch (Exception e) {
-        
         	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

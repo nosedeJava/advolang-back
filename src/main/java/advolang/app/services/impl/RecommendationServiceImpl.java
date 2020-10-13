@@ -2,9 +2,7 @@ package advolang.app.services.impl;
 
 import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.exceptions.UserNotFound;
-import advolang.app.models.Category;
 import advolang.app.models.Recommendation;
-import advolang.app.models.User;
 import advolang.app.repository.CategoryRepository;
 import advolang.app.repository.RecomRepository;
 import advolang.app.services.RecommendationService;
@@ -27,11 +25,10 @@ public class RecommendationServiceImpl implements RecommendationService {
     public void addRecommendation(Recommendation recommendation) throws RecommendationNotFound {
         try {
             this.recomRepository.save(recommendation);
-            for (Category category : recommendation.getCategories()) {
-                Category tempCategory = catRepo.findByValue(category.getValue());
-                tempCategory.setPopularity(tempCategory.getPopularity()+1);
-                catRepo.save(tempCategory);
-            }
+            recommendation.getCategories().forEach(category -> {
+                category.setPopularity(category.getPopularity()+1);
+                catRepo.save(category);
+            });
         } catch (Exception e) {
             throw new RecommendationNotFound("Failed to create a recommendations");
         }
