@@ -27,17 +27,19 @@ public class User {
     private String email;
 
     private String password;
+    
+    private String profileImage;
 
     private List<Recommendation> savedRecommendations;
 
     @DBRef
     private Set<Role> roles = new HashSet<>();
 
-    public User(String fullName, String email, String username, String password) {
+    public User(String fullName, String email, String username, String password, String profileImage) {
         this.fullName = fullName;
         this.email = email;
         this.username = username;
-        this.password = password;
+        this.profileImage = profileImage;
     }
 
     public List<Recommendation> getSavedRecommendations() {

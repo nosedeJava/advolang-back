@@ -22,7 +22,20 @@ public class RecommendationController {
 
 	@Autowired
 	private RecommendationService recommendationService;
-
+	
+	/**
+	 * Method to get all recommendations that have been created
+	 * @return A list with all recommendations
+	 */
+	@RequestMapping(value = "/recommendations", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllRecommendations() {
+        try {
+            return new ResponseEntity<>(recommendationService.getAllRecommendations(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
     /**
      * This method returns the recommendations linked to a language (ex: Spanish, English, etc).
      * However, such recommendations can be requested with filters.
@@ -61,7 +74,23 @@ public class RecommendationController {
             return new ResponseEntity<>("Unexpected error", HttpStatus.BAD_REQUEST);
         }
     }
-
+    
+    /**
+     * Method to get a specific recommendation by the given id
+     * @param id Id of the recommendation
+     * @return A response with the recommendation if exists or an error if not
+     */
+    @RequestMapping(value = "/recommendations/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getSpecificRecommendation(@PathVariable("id") String id){
+        try {
+            Recommendation specificRecommendation = recommendationService.getSpecificRecommendation(id);
+            return new ResponseEntity<>(specificRecommendation, HttpStatus.OK);
+        } catch (RecommendationNotFound recommendationNotFound) {
+            return new ResponseEntity<>("Error - Recommendation not found",HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /**
      * Method that receives the request for information related to a referral id.

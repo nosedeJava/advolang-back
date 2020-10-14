@@ -23,6 +23,13 @@ public interface RecommendationService {
      */
 	public List<Recommendation> getUserRecommendations(String creator) throws UserNotFound;
 
+	/**
+	 * Method to get all recommendations that have been created
+	 * @return A list of all recommendations
+	 * @throws RecommendationNotFound 
+	 */
+	public List<Recommendation> getAllRecommendations() throws RecommendationNotFound;
+	
     /**
      * 
      * @param language
@@ -38,6 +45,14 @@ public interface RecommendationService {
      */
     public List<Recommendation> getReportedRecommendations(String language) throws RecommendationNotFound;
     
+    /**
+     * Method to get an specific recommendation by the given id
+     * @param id Id of the recommendation
+     * @return The recommendation 
+     * @throws RecommendationNotFound If the recommendation does not exist
+     */
+	public Recommendation getSpecificRecommendation(String id) throws RecommendationNotFound;
+
     /**
      * 
      * @param language
@@ -74,5 +89,6 @@ public interface RecommendationService {
      * @param userId
      */
     public void removeSubscription(String language, String userId);
+
 
 }

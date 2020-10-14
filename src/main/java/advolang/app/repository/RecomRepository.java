@@ -29,6 +29,11 @@ public interface RecomRepository extends MongoRepository<Recommendation, String>
 
 	/**
 	 * 
+	 */
+	List<Recommendation> findAll ();
+	
+	/**
+	 * 
 	 * @param language
 	 * @return A list with all recommendations from a language
 	 */

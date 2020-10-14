@@ -46,6 +46,15 @@ public class RecommendationServiceImpl implements RecommendationService {
         }
 
     }
+    
+    @Override
+	public List<Recommendation> getAllRecommendations() throws RecommendationNotFound {
+    	try {
+            return this.recomRepository.findAll();
+        } catch (Exception e) {
+            throw new RecommendationNotFound("Failed find recommendations");
+        }
+	}
 
     @Override
     public List<Recommendation> getRecommendations(String language, List<String> values) throws RecommendationNotFound {
@@ -66,6 +75,15 @@ public class RecommendationServiceImpl implements RecommendationService {
         }
     }
 
+    @Override
+    public Recommendation getSpecificRecommendation(String id) throws RecommendationNotFound {
+        try {
+            return recomRepository.findById(id).get();
+        } catch (Exception e) {
+            throw new RecommendationNotFound("Recommendation not found");
+        }
+    }
+    
     @Override
     public Recommendation getSpecificRecommendation(String language, String id) throws RecommendationNotFound {
         try {
@@ -94,4 +112,5 @@ public class RecommendationServiceImpl implements RecommendationService {
     public void removeSubscription(String language, String userId) {
 
     }
+    
 }
