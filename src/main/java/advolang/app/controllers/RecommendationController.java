@@ -4,7 +4,10 @@ import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.models.Recommendation;
 import advolang.app.services.RecommendationService;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,14 +33,14 @@ public class RecommendationController {
      * @return  Returns the list of recommendations requested, under the parameters that have been received.
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.GET)
-    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam List<String> categories) {
+    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam(required = false) Optional<List<String>> categories) {
         try{
             //If a request is made to the reported recommendations a special parameter is received, taking into account flag.
-            if(categories.contains("reported")){
+            if(categories.isPresent() && categories.get().contains("reported")){
                 List<Recommendation> listReportedRecommendation = recommendationService.getReportedRecommendations(language);
                 return new ResponseEntity<>(listReportedRecommendation, HttpStatus.OK);
             }else{
-                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, categories);
+                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, categories.orElse(new ArrayList<String>()));
                 return new ResponseEntity<>(listRecommendation, HttpStatus.OK);
             }
         } catch(Exception e){
@@ -49,9 +52,11 @@ public class RecommendationController {
      * Method that allows the registration of a new recommendation about a language.
      * @return  Returns a success or error code as appropriate.
      */
-    @RequestMapping(value = "/recommendations", method = RequestMethod.POST)
-    public ResponseEntity<?> addRecommendation(@RequestBody Recommendation recommendation){
+    @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.POST)
+    public ResponseEntity<?> addRecommendation(@PathVariable("language") String language, @RequestBody Recommendation recommendation){
         try {
+            recommendation.setLanguage(language);
+            recommendation.setCreationDate(new Date());
             recommendationService.addRecommendation(recommendation);
             return new ResponseEntity<>("Created", HttpStatus.CREATED);
         } catch (Exception e) {
