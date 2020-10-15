@@ -1,6 +1,7 @@
 package advolang.app.controllers;
 
 import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
 import advolang.app.services.RecommendationService;
 
@@ -139,10 +140,12 @@ public class RecommendationController {
      * @return  Returns a success code or an error code as the case may be.
      */
     @RequestMapping(value = "/{language}/subscription", method = RequestMethod.POST)
-    public ResponseEntity<?> addSubscription(@PathVariable("language") String language, @RequestParam("user") String userId) {
+    public ResponseEntity<?> addSubscription(@PathVariable("language") String language, @RequestParam("username") String userId) {
         try {
             recommendationService.addSubscription(language, userId);
             return new ResponseEntity<>("Ok", HttpStatus.OK);
+        } catch (UserNotFound e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -156,12 +159,14 @@ public class RecommendationController {
      * @param userId    Identifier of the user that wishes to subscribe, it is expected to be some kind of string that allows its identification.
      * @return  Returns a success code or an error code as the case may be.
      */
-    @RequestMapping(value = "/{language}/subscription", method = RequestMethod.GET)
-    public ResponseEntity<?> removeSubscription(@PathVariable("language") String language, @RequestParam("user") String userId) {
+    @RequestMapping(value = "/{language}/subscription", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeSubscription(@PathVariable("language") String language, @RequestParam("username") String userId) {
         try {
             recommendationService.removeSubscription(language, userId);
             return new ResponseEntity<>("Ok", HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (UserNotFound e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
