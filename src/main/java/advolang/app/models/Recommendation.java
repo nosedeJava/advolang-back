@@ -16,6 +16,8 @@ import java.util.List;
  * Recommendation
  */
 @Data
+@Getter
+@Setter
 @Document(collection = "recommendations")
 public class Recommendation {
 	
@@ -40,9 +42,7 @@ public class Recommendation {
 
     private String resourceType;
     
-    private List<Score> scores;
-    
-    private List<Category> categories;
+    private List<Category> categories = new ArrayList<>();
 
     private Boolean reported;
 
@@ -56,7 +56,6 @@ public class Recommendation {
     	this.level = level;
     	this.creationDate = creationDate;
     	this.thumbnail = thumbnail;
-    	this.scores = new ArrayList<Score>();
     	this.categories = new ArrayList<Category>();
     }
 }

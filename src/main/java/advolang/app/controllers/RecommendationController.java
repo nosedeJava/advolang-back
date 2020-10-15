@@ -1,7 +1,9 @@
 package advolang.app.controllers;
 
 import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
+import advolang.app.models.Score;
 import advolang.app.services.RecommendationService;
 
 import java.util.List;
@@ -59,7 +61,6 @@ public class RecommendationController {
         }
     }
 
-
     /**
      * Method that receives the request for information related to a referral id.
      * @param language  Language in which the requested referral is located.
@@ -79,17 +80,40 @@ public class RecommendationController {
     }
 
     /**
-     * Revisar
-     * @param language
-     * @param id
-     * @return
+     *  Obtain the numerical value of the score related to a specific recommendation
+     * @param language  Language of the recommendation
+     * @param recommendationId  Recommendation identifier
+     * @return  Return the score
      */
-    @RequestMapping(value = "/{language}/recommendations/{id}/rate", method = RequestMethod.PATCH)
-    public ResponseEntity<?> updateRate(@PathVariable("language") String language, @PathVariable("id") long id) {
+    @RequestMapping(value = "/{language}/recommendations/{id}/score", method = RequestMethod.GET)
+    public ResponseEntity<?> getScoreOfRecommendation(@PathVariable("language") String language, @PathVariable("id") String recommendationId){
         try {
-            return null;           
+            Double score = recommendationService.getScoreOfRecommendation(language, recommendationId);
+            return new ResponseEntity<>(score, HttpStatus.OK);
+        } catch (RecommendationNotFound recommendationNotFound){
+            return new ResponseEntity<>("Error - Recommendation not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Register or update a score made by a specific user.
+     * @param language Language in which the recommendation is made
+     * @param recommendationId    Internal recommendation identifier
+     * @return Returns the numerical value of the new weighted score or error
+     */
+    @RequestMapping(value = "/{language}/recommendations/{id}/score", method = RequestMethod.PATCH)
+    public ResponseEntity<?> updateRate(@PathVariable("language") String language, @PathVariable("id") String recommendationId, @RequestBody Score newScore) {
+        try {
+            Double score = recommendationService.rateRecommendation(language, recommendationId, newScore);
+            return new ResponseEntity<>(score, HttpStatus.OK);
+        } catch (RecommendationNotFound recommendationNotFound){
+            return new ResponseEntity<>("Error - Recommendation not found", HttpStatus.NOT_FOUND);
+        } catch (UserNotFound userNotFound){
+            return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return null;
+            return new ResponseEntity<>("Error - Bad request", HttpStatus.BAD_REQUEST);
         }
     }
 

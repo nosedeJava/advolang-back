@@ -3,14 +3,21 @@ package advolang.app.services.impl;
 import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
+import advolang.app.models.Score;
+import advolang.app.models.User;
 import advolang.app.repository.CategoryRepository;
 import advolang.app.repository.RecomRepository;
+import advolang.app.repository.ScoreRepository;
+import advolang.app.repository.UserRepository;
 import advolang.app.services.RecommendationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
@@ -20,6 +27,12 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Autowired
     private CategoryRepository catRepo;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ScoreRepository scoreRepository;
 
     @Override
     public void addRecommendation(Recommendation recommendation) throws RecommendationNotFound {
@@ -90,5 +103,45 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public void removeSubscription(String language, String userId) {
 
+    }
+
+    @Override
+    public Double getScoreOfRecommendation(String language, String recommendationId) throws RecommendationNotFound {
+        // Confirmation of recommendation's existence
+        if(!recomRepository.existsById(recommendationId)) throw new RecommendationNotFound("Error - Recommendation not found");
+        // Calculation of the score
+        List<Score> scores = scoreRepository.findAllByRecommendationId(recommendationId);
+        float sum = 0;
+        for(Score score : scores){
+            sum+=score.getValue();
+        }
+        if(sum==0) return Double.valueOf("0");
+        else {
+            float average = sum / scores.size();
+            Double result = Double.valueOf(average);
+            return result;
+        }
+    }
+
+    @Override
+    public Double rateRecommendation(String language, String recommendationId, Score newScore) throws RecommendationNotFound, UserNotFound, Exception {
+        // Confirmation of recommendation's existence and the consistent relationship
+        if(!recomRepository.existsById(recommendationId)) throw new RecommendationNotFound("Error - Recommendation not found");
+        if(!recommendationId.equals(newScore.getRecommendationId())) throw new Exception("Error - Inconsistent information");
+        // Confirmation of user's existence
+        if(!userRepository.existsById(newScore.getUserId())) throw new UserNotFound("Error - User not found");
+        // Confirmation of score's existence
+        Score previousScore = null;
+        // If the user has previously scored
+        try {
+            previousScore = scoreRepository.findByUserAndRecommendation(newScore.getUserId(), newScore.getRecommendationId()).get();
+            previousScore.setValue(newScore.getValue());
+            scoreRepository.save(previousScore);
+        }
+        // In case the score is new
+        catch(Exception e) {
+            scoreRepository.save(newScore);
+        }
+        return getScoreOfRecommendation(language, recommendationId);
     }
 }

@@ -3,6 +3,7 @@ package advolang.app.services;
 import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
+import advolang.app.models.Score;
 
 import java.util.List;
 
@@ -72,4 +73,19 @@ public interface RecommendationService {
      */
     void removeSubscription(String language, String userId);
 
+    /**
+     * Get the average of scores related to a specific recommendation.
+     * @param language  The language of that recommendation
+     * @param recommendationId  Identifier of recommendation
+     * @return  Numerical average of the scores
+     */
+    Double getScoreOfRecommendation(String language, String recommendationId)  throws RecommendationNotFound;
+
+    /**
+     *
+     * @param language
+     * @param recommendationId
+     * @return
+     */
+    Double rateRecommendation(String language, String recommendationId, Score newScore) throws RecommendationNotFound, UserNotFound, Exception;
 }
