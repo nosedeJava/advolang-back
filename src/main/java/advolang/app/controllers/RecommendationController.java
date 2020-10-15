@@ -122,40 +122,6 @@ public class RecommendationController {
         }
     }
 
-
-    /**
-     * This method is in charge of returning the categories related to a specific language.
-     * @param language  Identifier of the language on which the request is made.
-     * @return  Returns the list of categories or an error if it occurs.
-     */
-    @RequestMapping(value = "/{language}/categories", method = RequestMethod.GET)
-    public ResponseEntity<?> getCategories(@PathVariable("language") String language) {
-        try {
-            List<String> categories = recommendationService.getCategories(language);
-            return new ResponseEntity<>(categories, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }    
-    }
-
-
-    /**
-     * Method in charge of receiving the requests of creation of a category on a specific language.
-     * @param language  Identifier of the language on which the request is made.
-     * @param category  Category in question, in this case a string containing the "name" of the category is expected.
-     * @return  Returns a success code or an error code as the case may be.
-     */
-    @RequestMapping(value = "/{language}/categories", method = RequestMethod.POST)
-    public ResponseEntity<?> addCategory(@PathVariable("language") String language, @RequestParam("category") String category) {
-        try {
-            recommendationService.addCategory(language, category);
-            return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
     /**
      * This method performs the registration of a new subscription of a user to a specific language.
      * @param language  Identifier of the language on which the request is made.

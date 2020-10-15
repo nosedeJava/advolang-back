@@ -91,16 +91,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public List<String> getCategories(String language) {
-        return null;
-    }
-
-    @Override
-    public void addCategory(String language, String category) {
-
-    }
-
-    @Override
     public void addSubscription(String language, String username) throws UserNotFound {
         try {
             Optional<User> us= userRepository.findByUsername(username);
