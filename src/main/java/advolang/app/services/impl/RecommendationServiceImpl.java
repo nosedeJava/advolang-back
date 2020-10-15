@@ -4,15 +4,19 @@ import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Category;
 import advolang.app.models.Recommendation;
+import advolang.app.models.Score;
 import advolang.app.models.User;
 import advolang.app.repository.CategoryRepository;
 import advolang.app.repository.RecomRepository;
+import advolang.app.repository.ScoreRepository;
 import advolang.app.repository.UserRepository;
 import advolang.app.services.RecommendationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +30,15 @@ public class RecommendationServiceImpl implements RecommendationService {
     private CategoryRepository catRepo;
 
     @Autowired
-    private UserRepository userRepo;
+    private UserRepository userRepository;
+
+    @Autowired
+    private ScoreRepository scoreRepository;
+
     /**
      * When a recommendations is added, update to each category its popularity
      */
+
     @Override
     public void addRecommendation(Recommendation recommendation) throws RecommendationNotFound {
         try {
@@ -94,12 +103,12 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public void addSubscription(String language, String username) throws UserNotFound {
         try {
-            Optional<User> us= userRepo.findByUsername(username);
+            Optional<User> us= userRepository.findByUsername(username);
             if(!us.isPresent())throw new UserNotFound("No user exists with that username");
             User user = us.get();
             if(user.getSubscriptions().contains(language)) throw new UserNotFound("This user is already subscribed to this language");
             user.getSubscriptions().add(language);
-            userRepo.save(user);
+            userRepository.save(user);
         } catch (Exception e) {
             throw new UserNotFound("Subscription failed");
         }
@@ -108,14 +117,54 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public void removeSubscription(String language, String username) throws UserNotFound{
         try {
-            Optional<User> us= userRepo.findByUsername(username);
+            Optional<User> us= userRepository.findByUsername(username);
             if(!us.isPresent())throw new UserNotFound("No user exists with that username");
             User user = us.get();
             if(!user.getSubscriptions().contains(language)) throw new UserNotFound("This user hasn't suscribed to this language");
             user.getSubscriptions().remove(language);
-            userRepo.save(user);
+            userRepository.save(user);
         } catch (Exception e) {
             throw new UserNotFound("Remove subscription failed");
         }
+    }
+
+    @Override
+    public Double getScoreOfRecommendation(String language, String recommendationId) throws RecommendationNotFound {
+        // Confirmation of recommendation's existence
+        if(!recomRepository.existsById(recommendationId)) throw new RecommendationNotFound("Error - Recommendation not found");
+        // Calculation of the score
+        List<Score> scores = scoreRepository.findAllByRecommendationId(recommendationId);
+        float sum = 0;
+        for(Score score : scores){
+            sum+=score.getValue();
+        }
+        if(sum==0) return Double.valueOf("0");
+        else {
+            float average = sum / scores.size();
+            Double result = Double.valueOf(average);
+            return result;
+        }
+    }
+
+    @Override
+    public Double rateRecommendation(String language, String recommendationId, Score newScore) throws RecommendationNotFound, UserNotFound, Exception {
+        // Confirmation of recommendation's existence and the consistent relationship
+        if(!recomRepository.existsById(recommendationId)) throw new RecommendationNotFound("Error - Recommendation not found");
+        if(!recommendationId.equals(newScore.getRecommendationId())) throw new Exception("Error - Inconsistent information");
+        // Confirmation of user's existence
+        if(!userRepository.existsById(newScore.getUserId())) throw new UserNotFound("Error - User not found");
+        // Confirmation of score's existence
+        Score previousScore = null;
+        // If the user has previously scored
+        try {
+            previousScore = scoreRepository.findByUserAndRecommendation(newScore.getUserId(), newScore.getRecommendationId()).get();
+            previousScore.setValue(newScore.getValue());
+            scoreRepository.save(previousScore);
+        }
+        // In case the score is new
+        catch(Exception e) {
+            scoreRepository.save(newScore);
+        }
+        return getScoreOfRecommendation(language, recommendationId);
     }
 }

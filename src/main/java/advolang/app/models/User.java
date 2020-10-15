@@ -29,7 +29,7 @@ public class User {
 
     private String password;
 
-    private List<Recommendation> savedRecommendations;
+    private List<Recommendation> savedRecommendations = new ArrayList<>();
 
     private List<String> subscriptions = new ArrayList<String>();
     @DBRef

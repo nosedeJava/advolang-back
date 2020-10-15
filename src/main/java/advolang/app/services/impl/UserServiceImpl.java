@@ -74,8 +74,6 @@ public class UserServiceImpl implements UserService {
     public void saveRecommendation(String userId, String recommendationId) throws UserNotFound, RecommendationNotFound{
 		// Confirmation of user's existence
 		User user = this.getUserByUsername(userId);
-		user.setSavedRecommendations(user.getSavedRecommendations()==null ?
-				new ArrayList<Recommendation>() : user.getSavedRecommendations());
 		// Confirmation of recommendation's existence
 		Optional<Recommendation> dbRecommendation = this.recommendationRepository.findById(recommendationId);
 		Recommendation recommendation;
@@ -93,8 +91,6 @@ public class UserServiceImpl implements UserService {
     public void removeSavedRecommendation(String userId, String recommendationId) throws UserNotFound, RecommendationNotFound {
 		// Confirmation of user's existence
 		User user = this.getUserByUsername(userId);
-		user.setSavedRecommendations(user.getSavedRecommendations()==null ?
-				new ArrayList<Recommendation>() : user.getSavedRecommendations());
 		// Confirmation of recommendation's existence
 		Optional<Recommendation> dbRecommendation = this.recommendationRepository.findById(recommendationId);
 		Recommendation recommendation;
