@@ -29,7 +29,7 @@ public class User {
 
     private String password;
 
-    private String thumbnail;
+    private String profileImage;
 
     private List<Recommendation> savedRecommendations = new ArrayList<>();
 
