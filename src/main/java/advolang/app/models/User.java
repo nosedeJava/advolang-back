@@ -29,6 +29,8 @@ public class User {
 
     private String password;
 
+    private String thumbnail;
+
     private List<Recommendation> savedRecommendations = new ArrayList<>();
 
     private List<String> subscriptions = new ArrayList<String>();
@@ -40,17 +42,5 @@ public class User {
         this.email = email;
         this.username = username;
         this.password = password;
-    }
-
-    public List<Recommendation> getSavedRecommendations() {
-        return this.savedRecommendations;
-    }
-
-    public void setSavedRecommendations(List<Recommendation> savedRecommendations) { 
-        this.savedRecommendations = savedRecommendations; 
-    }
-
-    public void setSubscriptions(List<String> subscriptions){
-        this.subscriptions = subscriptions;
     }
 }

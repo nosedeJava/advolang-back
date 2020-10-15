@@ -48,20 +48,6 @@ public interface RecommendationService {
     /**
      * 
      * @param language
-     * @return
-     */
-    List<String> getCategories(String language);
-    
-    /**
-     * 
-     * @param language
-     * @param category
-     */
-    void addCategory(String language, String category);
-    
-    /**
-     * 
-     * @param language
      * @param userId
      */
     void addSubscription(String language, String userId) throws UserNotFound;
