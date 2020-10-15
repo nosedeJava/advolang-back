@@ -31,6 +31,7 @@ public class User {
 
     private List<Recommendation> savedRecommendations = new ArrayList<>();
 
+    private List<String> subscriptions = new ArrayList<String>();
     @DBRef
     private Set<Role> roles = new HashSet<>();
 
@@ -45,5 +46,11 @@ public class User {
         return this.savedRecommendations;
     }
 
-    public void setSavedRecommendations(List<Recommendation> savedRecommendations) { this.savedRecommendations = savedRecommendations; }
+    public void setSavedRecommendations(List<Recommendation> savedRecommendations) { 
+        this.savedRecommendations = savedRecommendations; 
+    }
+
+    public void setSubscriptions(List<String> subscriptions){
+        this.subscriptions = subscriptions;
+    }
 }

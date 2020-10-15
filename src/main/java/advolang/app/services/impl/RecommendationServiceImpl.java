@@ -2,6 +2,7 @@ package advolang.app.services.impl;
 
 import advolang.app.exceptions.RecommendationNotFound;
 import advolang.app.exceptions.UserNotFound;
+import advolang.app.models.Category;
 import advolang.app.models.Recommendation;
 import advolang.app.models.Score;
 import advolang.app.models.User;
@@ -34,14 +35,19 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Autowired
     private ScoreRepository scoreRepository;
 
+    /**
+     * When a recommendations is added, update to each category its popularity
+     */
+
     @Override
     public void addRecommendation(Recommendation recommendation) throws RecommendationNotFound {
         try {
             this.recomRepository.save(recommendation);
-            recommendation.getCategories().forEach(category -> {
-                category.setPopularity(category.getPopularity()+1);
-                catRepo.save(category);
-            });
+            for (Category category : recommendation.getCategories()) {
+                Category ct=catRepo.findByValue(category.getValue()).get();
+                ct.setPopularity(ct.getPopularity()+1);
+                catRepo.save(ct);
+            }
         } catch (Exception e) {
             throw new RecommendationNotFound("Failed to create a recommendations");
         }
@@ -54,7 +60,6 @@ public class RecommendationServiceImpl implements RecommendationService {
         } catch (Exception e) {
             throw new UserNotFound("No recommendations found for this user");
         }
-
     }
 
     @Override
@@ -96,13 +101,31 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public void addSubscription(String language, String userId) {
-
+    public void addSubscription(String language, String username) throws UserNotFound {
+        try {
+            Optional<User> us= userRepository.findByUsername(username);
+            if(!us.isPresent())throw new UserNotFound("No user exists with that username");
+            User user = us.get();
+            if(user.getSubscriptions().contains(language)) throw new UserNotFound("This user is already subscribed to this language");
+            user.getSubscriptions().add(language);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new UserNotFound("Subscription failed");
+        }
     }
 
     @Override
-    public void removeSubscription(String language, String userId) {
-
+    public void removeSubscription(String language, String username) throws UserNotFound{
+        try {
+            Optional<User> us= userRepository.findByUsername(username);
+            if(!us.isPresent())throw new UserNotFound("No user exists with that username");
+            User user = us.get();
+            if(!user.getSubscriptions().contains(language)) throw new UserNotFound("This user hasn't suscribed to this language");
+            user.getSubscriptions().remove(language);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new UserNotFound("Remove subscription failed");
+        }
     }
 
     @Override

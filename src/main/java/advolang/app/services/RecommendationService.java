@@ -64,14 +64,14 @@ public interface RecommendationService {
      * @param language
      * @param userId
      */
-    void addSubscription(String language, String userId);
+    void addSubscription(String language, String userId) throws UserNotFound;
     
     /**
      * 
      * @param language
      * @param userId
      */
-    void removeSubscription(String language, String userId);
+    void removeSubscription(String language, String userId) throws UserNotFound;
 
     /**
      * Get the average of scores related to a specific recommendation.

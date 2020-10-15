@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * Category
  */
 @Data
+@Getter
+@Setter
 @Document(collection = "categories")
 @AllArgsConstructor
 @NoArgsConstructor
