@@ -25,8 +25,13 @@ public class ScoreController {
 	@Autowired
 	private ScoreService scoreService;
 	
+	/**
+	 * 
+	 * @param score
+	 * @return
+	 */
 	@RequestMapping(value = "/scores/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addRecommendation(@RequestBody Score score) {
+    public ResponseEntity<?> addScoreRecommendation(@RequestBody Score score) {
 		System.out.println(score.toString());
 		try {
 			this.scoreService.addScore(score);
@@ -36,8 +41,14 @@ public class ScoreController {
         }
 	}
 	
+	/**
+	 * 
+	 * @param userId
+	 * @param recommendationId
+	 * @return
+	 */
 	@RequestMapping(value = "/scores/{userId}/{recommendationId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getRecommendations(@PathVariable("userId") String userId, @PathVariable("recommendationId") String recommendationId) {
+    public ResponseEntity<?> getIfExistScoreUserRecommendation(@PathVariable("userId") String userId, @PathVariable("recommendationId") String recommendationId) {
         try{
         	return new ResponseEntity<>(this.scoreService.checkIfExistsUserScore(userId, recommendationId), HttpStatus.OK);
             
@@ -46,7 +57,53 @@ public class ScoreController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+	
+	/**
+	 * 
+	 * @param userId
+	 * @param recommendationId
+	 * @return
+	 */
+	@RequestMapping(value = "/scores/values/{userId}/{recommendationId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getScoreUserRecommendation(@PathVariable("userId") String userId, @PathVariable("recommendationId") String recommendationId) {
+        try{
+        	return new ResponseEntity<>(this.scoreService.getScoreByUserAndRecom(userId, recommendationId), HttpStatus.OK);
+            
+        } catch(Exception e){
+        	System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	/**
+	 * 
+	 * @param score
+	 * @return
+	 */
+	@RequestMapping(value = "/scores/value/update", method = RequestMethod.POST)
+	public ResponseEntity<?> updateScoreUserRecommendation(@RequestBody Score score) {
+        try{
+        	this.scoreService.updateScoreValue(score);
+        	return new ResponseEntity<>(this.scoreService.getScoresValuesSpecificRecom(score.getRecommendationId()), HttpStatus.OK);
+            
+        } catch(Exception e){
+        	System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	@RequestMapping(value = "/scores/values/{recommendationId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getRecommendationScoresValues(@PathVariable("recommendationId") String recommendationId) {
+        try{
+        	return new ResponseEntity<>(this.scoreService.getScoresValuesSpecificRecom(recommendationId), HttpStatus.OK);
+            
+        } catch(Exception e){
+        	System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	
 }
 	
 	
