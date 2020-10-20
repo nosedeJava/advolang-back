@@ -6,7 +6,6 @@ import advolang.app.repository.UserRepository;
 import advolang.app.services.RecommendationService;
 import advolang.app.services.UserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,15 +24,18 @@ import advolang.app.models.User;
 @RequestMapping("/api")
 public class UserController {
 	
-	@Autowired
-    private UserService userService;
+	private final UserService userService;
     
-    @Autowired
-	private RecommendationService recommendationService;
+    private final RecommendationService recommendationService;
 
-    @Autowired
-    private UserRepository userRepository;
-    
+    private final UserRepository userRepository;
+
+    public UserController(UserService userService, RecommendationService recommendationService, UserRepository userRepository) {
+        this.userService = userService;
+        this.recommendationService = recommendationService;
+        this.userRepository = userRepository;
+    }
+
     /**
      * Method that allows to obtain the information related to a specific user.
      * @param username    Identifier of the user who wishes to subscribe, it is expected to be some kind of string that allows its identification.

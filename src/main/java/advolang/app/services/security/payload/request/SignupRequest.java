@@ -20,6 +20,4 @@ public class SignupRequest {
     private Set<String> roles;
 
     private String password;
-    
-    private String profileImage;
 }
