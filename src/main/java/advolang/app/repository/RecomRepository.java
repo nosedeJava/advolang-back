@@ -26,7 +26,20 @@ public interface RecomRepository extends MongoRepository<Recommendation, String>
 	 */
 	@Query(value = "{'creator' : ?0 }")
 	List<Recommendation> findByCreator(String creator);
+	
+	/**
+	 * 
+	 * @param id
+	 * @param creator
+	 * @return
+	 */
+	Optional<Recommendation> findByIdAndCreator (String id, String creator);
 
+	/**
+	 * 
+	 */
+	List<Recommendation> findAll ();
+	
 	/**
 	 * 
 	 * @param language

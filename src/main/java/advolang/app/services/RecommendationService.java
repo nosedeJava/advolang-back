@@ -22,6 +22,13 @@ public interface RecommendationService {
      */
 	List<Recommendation> getUserRecommendations(String creator) throws UserNotFound;
 
+	/**
+	 * Method to get all recommendations that have been created
+	 * @return A list of all recommendations
+	 * @throws RecommendationNotFound 
+	 */
+	public List<Recommendation> getAllRecommendations() throws RecommendationNotFound;
+	
     /**
      * 
      * @param language
@@ -36,6 +43,14 @@ public interface RecommendationService {
      */
     List<Recommendation> getReportedRecommendations(String language) throws RecommendationNotFound;
     
+    /**
+     * Method to get an specific recommendation by the given id
+     * @param id Id of the recommendation
+     * @return The recommendation 
+     * @throws RecommendationNotFound If the recommendation does not exist
+     */
+	public Recommendation getSpecificRecommendationWithUser(String username, String id) throws RecommendationNotFound;
+
     /**
      * 
      * @param language
@@ -67,11 +82,6 @@ public interface RecommendationService {
      */
     Double getScoreOfRecommendation(String language, String recommendationId)  throws RecommendationNotFound;
 
-    /**
-     *
-     * @param language
-     * @param recommendationId
-     * @return
-     */
     Double rateRecommendation(String language, String recommendationId, Score newScore) throws RecommendationNotFound, UserNotFound, Exception;
+
 }
