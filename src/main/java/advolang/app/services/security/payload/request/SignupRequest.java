@@ -10,6 +10,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignupRequest {
+	
     private String username;
 
     private String email;
@@ -19,4 +20,6 @@ public class SignupRequest {
     private Set<String> roles;
 
     private String password;
+    
+    private String profileImage;
 }
