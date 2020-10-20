@@ -49,7 +49,7 @@ public interface RecommendationService {
      * @return The recommendation 
      * @throws RecommendationNotFound If the recommendation does not exist
      */
-	public Recommendation getSpecificRecommendation(String id) throws RecommendationNotFound;
+	public Recommendation getSpecificRecommendationWithUser(String username, String id) throws RecommendationNotFound;
 
     /**
      * 

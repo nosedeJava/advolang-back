@@ -84,11 +84,31 @@ public class RecommendationController {
      * @param id Id of the recommendation
      * @return A response with the recommendation if exists or an error if not
      */
-    @RequestMapping(value = "/recommendations/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getSpecificRecommendation(@PathVariable("id") String id){
+    @RequestMapping(value = "{language}/{username}/recommendations/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getSpecificRecommendation(@PathVariable("language") String language, 
+    		@PathVariable("username") String username, @PathVariable("id") String id){
         try {
-            Recommendation specificRecommendation = recommendationService.getSpecificRecommendation(id);
+            Recommendation specificRecommendation = recommendationService.getSpecificRecommendation(username, id);
             return new ResponseEntity<>(specificRecommendation, HttpStatus.OK);
+        } catch (RecommendationNotFound recommendationNotFound) {
+            return new ResponseEntity<>("Error - Recommendation not found",HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    /**
+     * Method to get Recommendation thumbnail url
+     * @param language
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/{language}/recommendations/{id}/thumbnail", method = RequestMethod.GET)
+    public ResponseEntity<?> getSpecificRecommendationThumb(@PathVariable("language") String language, @PathVariable("id") String id){
+        try {
+            Recommendation specificRecommendation = recommendationService.getSpecificRecommendation(language, id);
+            
+            return new ResponseEntity<>(specificRecommendation.getThumbnail(), HttpStatus.OK);
         } catch (RecommendationNotFound recommendationNotFound) {
             return new ResponseEntity<>("Error - Recommendation not found",HttpStatus.NOT_FOUND);
         } catch (Exception e){

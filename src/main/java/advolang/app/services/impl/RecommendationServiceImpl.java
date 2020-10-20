@@ -91,9 +91,9 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public Recommendation getSpecificRecommendation(String id) throws RecommendationNotFound {
+    public Recommendation getSpecificRecommendationWithUser(String username, String id) throws RecommendationNotFound {
         try {
-            return recomRepository.findById(id).get();
+            return recomRepository.findByIdAndCreator(id, username).get();
         } catch (Exception e) {
             throw new RecommendationNotFound("Recommendation not found");
         }
