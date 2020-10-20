@@ -13,11 +13,12 @@ import advolang.app.services.UserService;
 import advolang.app.services.security.jwt.JwtUtils;
 import advolang.app.services.security.services.UserDetailsImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -33,25 +34,25 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 public class AuthController {
 	
-	@Autowired
-    private AuthenticationManager authenticationManager;
+	private final AuthenticationManager authenticationManager;
 
-	@Autowired
-    private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-    private RoleRepository roleRepository;
+	private final RoleRepository roleRepository;
 
-	@Autowired
-	private PasswordEncoder encoder;
+	private final PasswordEncoder encoder;
 
-	@Autowired
-    private JwtUtils jwtUtils;
+	private final JwtUtils jwtUtils;
 
 	final AzureBlobAdapter azureBlobAdapter;
 
-    public AuthController(AzureBlobAdapter azureBlobAdapter) {
+    public AuthController(AzureBlobAdapter azureBlobAdapter, AuthenticationManager authenticationManager, UserService userService, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
         this.azureBlobAdapter = azureBlobAdapter;
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.roleRepository = roleRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
     }
 
 
@@ -66,7 +67,7 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new JwtResponse(jwt,
@@ -126,4 +127,17 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        try {
+            userService.saveUser(user);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("Failed to update the user", HttpStatus.FORBIDDEN);
+        }
+    }
+
 }
