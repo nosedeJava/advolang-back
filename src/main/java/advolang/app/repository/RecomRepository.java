@@ -38,6 +38,7 @@ public interface RecomRepository extends MongoRepository<Recommendation, String>
 	 * @return A list with all recommendations from a language
 	 */
 	List<Recommendation> findByLanguage(String language);
+
 	/**
 	 * 
 	 * @return A list with all reported recommendations from a language 

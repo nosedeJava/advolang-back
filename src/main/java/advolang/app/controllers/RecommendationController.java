@@ -1,10 +1,15 @@
 package advolang.app.controllers;
 
 import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
+import advolang.app.models.Score;
 import advolang.app.services.RecommendationService;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,18 +45,17 @@ public class RecommendationController {
      * This method returns the recommendations linked to a language (ex: Spanish, English, etc).
      * However, such recommendations can be requested with filters.
      * @param language  Identifier of the language in which the request is made.
-     * @param parameters    Filter parameters.
      * @return  Returns the list of recommendations requested, under the parameters that have been received.
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.GET)
-    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam List<String> categories) {
+    public ResponseEntity<?> getRecommendations(@PathVariable("language") String language, @RequestParam(required = false) Optional<List<String>> categories) {
         try{
             //If a request is made to the reported recommendations a special parameter is received, taking into account flag.
-            if(categories.contains("reported")){
+            if(categories.isPresent() && categories.get().contains("reported")){
                 List<Recommendation> listReportedRecommendation = recommendationService.getReportedRecommendations(language);
                 return new ResponseEntity<>(listReportedRecommendation, HttpStatus.OK);
             }else{
-                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, categories);
+                List<Recommendation> listRecommendation = recommendationService.getRecommendations(language, categories.orElse(new ArrayList<String>()));
                 return new ResponseEntity<>(listRecommendation, HttpStatus.OK);
             }
         } catch(Exception e){
@@ -61,13 +65,13 @@ public class RecommendationController {
 
     /**
      * Method that allows the registration of a new recommendation about a language.
-     * @param language  Identifier of the language on which the request is made.
      * @return  Returns a success or error code as appropriate.
      */
     @RequestMapping(value = "/{language}/recommendations", method = RequestMethod.POST)
     public ResponseEntity<?> addRecommendation(@PathVariable("language") String language, @RequestBody Recommendation recommendation){
-        System.out.println(recommendation.toString());
         try {
+            recommendation.setLanguage(language);
+            recommendation.setCreationDate(new Date());
             recommendationService.addRecommendation(recommendation);
             return new ResponseEntity<>("Created", HttpStatus.CREATED);
         } catch (Exception e) {
@@ -111,53 +115,42 @@ public class RecommendationController {
     }
 
     /**
-     * Revisar
-     * @param language
-     * @param id
-     * @return
+     *  Obtain the numerical value of the score related to a specific recommendation
+     * @param language  Language of the recommendation
+     * @param recommendationId  Recommendation identifier
+     * @return  Return the score
      */
-    @RequestMapping(value = "/{language}/recommendations/{id}/rate", method = RequestMethod.PATCH)
-    public ResponseEntity<?> updateRate(@PathVariable("language") String language, @PathVariable("id") long id) {
+    @RequestMapping(value = "/{language}/recommendations/{id}/score", method = RequestMethod.GET)
+    public ResponseEntity<?> getScoreOfRecommendation(@PathVariable("language") String language, @PathVariable("id") String recommendationId){
         try {
-            return null;           
-        } catch (Exception e) {
-            return null;
+            Double score = recommendationService.getScoreOfRecommendation(language, recommendationId);
+            return new ResponseEntity<>(score, HttpStatus.OK);
+        } catch (RecommendationNotFound recommendationNotFound){
+            return new ResponseEntity<>("Error - Recommendation not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-
     /**
-     * This method is in charge of returning the categories related to a specific language.
-     * @param language  Identifier of the language on which the request is made.
-     * @return  Returns the list of categories or an error if it occurs.
+     * Register or update a score made by a specific user.
+     * @param language Language in which the recommendation is made
+     * @param recommendationId    Internal recommendation identifier
+     * @return Returns the numerical value of the new weighted score or error
      */
-    @RequestMapping(value = "/{language}/categories", method = RequestMethod.GET)
-    public ResponseEntity<?> getCategories(@PathVariable("language") String language) {
+    @RequestMapping(value = "/{language}/recommendations/{id}/score", method = RequestMethod.PATCH)
+    public ResponseEntity<?> updateRate(@PathVariable("language") String language, @PathVariable("id") String recommendationId, @RequestBody Score newScore) {
         try {
-            List<String> categories = recommendationService.getCategories(language);
-            return new ResponseEntity<>(categories, HttpStatus.OK);
+            Double score = recommendationService.rateRecommendation(language, recommendationId, newScore);
+            return new ResponseEntity<>(score, HttpStatus.OK);
+        } catch (RecommendationNotFound recommendationNotFound){
+            return new ResponseEntity<>("Error - Recommendation not found", HttpStatus.NOT_FOUND);
+        } catch (UserNotFound userNotFound){
+            return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }    
-    }
-
-
-    /**
-     * Method in charge of receiving the requests of creation of a category on a specific language.
-     * @param language  Identifier of the language on which the request is made.
-     * @param category  Category in question, in this case a string containing the "name" of the category is expected.
-     * @return  Returns a success code or an error code as the case may be.
-     */
-    @RequestMapping(value = "/{language}/categories", method = RequestMethod.POST)
-    public ResponseEntity<?> addCategory(@PathVariable("language") String language, @RequestParam("category") String category) {
-        try {
-            recommendationService.addCategory(language, category);
-            return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error - Bad request", HttpStatus.BAD_REQUEST);
         }
     }
-
 
     /**
      * This method performs the registration of a new subscription of a user to a specific language.
@@ -166,10 +159,12 @@ public class RecommendationController {
      * @return  Returns a success code or an error code as the case may be.
      */
     @RequestMapping(value = "/{language}/subscription", method = RequestMethod.POST)
-    public ResponseEntity<?> addSubscription(@PathVariable("language") String language, @RequestParam("user") String userId) {
+    public ResponseEntity<?> addSubscription(@PathVariable("language") String language, @RequestParam("username") String userId) {
         try {
             recommendationService.addSubscription(language, userId);
             return new ResponseEntity<>("Ok", HttpStatus.OK);
+        } catch (UserNotFound e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -183,12 +178,14 @@ public class RecommendationController {
      * @param userId    Identifier of the user that wishes to subscribe, it is expected to be some kind of string that allows its identification.
      * @return  Returns a success code or an error code as the case may be.
      */
-    @RequestMapping(value = "/{language}/subscription", method = RequestMethod.GET)
-    public ResponseEntity<?> removeSubscription(@PathVariable("language") String language, @RequestParam("user") String userId) {
+    @RequestMapping(value = "/{language}/subscription", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeSubscription(@PathVariable("language") String language, @RequestParam("username") String userId) {
         try {
             recommendationService.removeSubscription(language, userId);
             return new ResponseEntity<>("Ok", HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (UserNotFound e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

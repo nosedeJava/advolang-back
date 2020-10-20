@@ -4,8 +4,6 @@ import advolang.app.models.Category;
 import advolang.app.repository.CategoryRepository;
 import advolang.app.services.CategoryService;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,8 +31,11 @@ public class User {
     
     private String profileImage;
 
-    private List<Recommendation> savedRecommendations;
+    private String profileImage;
 
+    private List<Recommendation> savedRecommendations = new ArrayList<>();
+
+    private List<String> subscriptions = new ArrayList<String>();
     @DBRef
     private Set<Role> roles = new HashSet<>();
 
@@ -41,10 +45,4 @@ public class User {
         this.username = username;
         this.profileImage = profileImage;
     }
-
-    public List<Recommendation> getSavedRecommendations() {
-        return this.savedRecommendations;
-    }
-
-    public void setSavedRecommendations(List<Recommendation> savedRecommendations) { this.savedRecommendations = savedRecommendations; }
 }

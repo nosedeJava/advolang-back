@@ -3,6 +3,7 @@ package advolang.app.controllers;
 import advolang.app.models.ERole;
 import advolang.app.models.Role;
 import advolang.app.models.User;
+import advolang.app.services.azure.AzureBlobAdapter;
 import advolang.app.services.security.payload.request.LoginRequest;
 import advolang.app.services.security.payload.request.SignupRequest;
 import advolang.app.services.security.payload.response.JwtResponse;
@@ -47,7 +48,13 @@ public class AuthController {
 	@Autowired
     private JwtUtils jwtUtils;
 
-	
+	final AzureBlobAdapter azureBlobAdapter;
+
+    public AuthController(AzureBlobAdapter azureBlobAdapter) {
+        this.azureBlobAdapter = azureBlobAdapter;
+    }
+
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
@@ -115,6 +122,8 @@ public class AuthController {
 
         user.setRoles(roles);
         userService.saveUser(user);
+
+        azureBlobAdapter.createContainer(user.getUsername());
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
