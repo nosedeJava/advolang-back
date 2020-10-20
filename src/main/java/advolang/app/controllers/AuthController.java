@@ -130,7 +130,6 @@ public class AuthController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
         try {
             userService.saveUser(user);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -139,5 +138,4 @@ public class AuthController {
             return new ResponseEntity<>("Failed to update the user", HttpStatus.FORBIDDEN);
         }
     }
-
 }
