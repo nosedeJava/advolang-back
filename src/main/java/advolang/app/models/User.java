@@ -31,8 +31,6 @@ public class User {
     
     private String profileImage;
 
-    private String profileImage;
-
     private List<Recommendation> savedRecommendations = new ArrayList<>();
 
     private List<String> subscriptions = new ArrayList<String>();

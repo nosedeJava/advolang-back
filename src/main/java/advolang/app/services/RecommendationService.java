@@ -82,14 +82,6 @@ public interface RecommendationService {
      */
     Double getScoreOfRecommendation(String language, String recommendationId)  throws RecommendationNotFound;
 
-    /**
-     *
-     * @param language
-     * @param recommendationId
-     * @return
-     */
-    public void removeSubscription(String language, String userId);
-
     Double rateRecommendation(String language, String recommendationId, Score newScore) throws RecommendationNotFound, UserNotFound, Exception;
 
 }

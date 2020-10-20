@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-
-public interface ScoreRepository extends MongoRepository<Score, String> {
 	
 @Repository
 public interface ScoreRepository extends MongoRepository<Score, String> {
@@ -23,7 +21,7 @@ public interface ScoreRepository extends MongoRepository<Score, String> {
 
     public Optional<Score> findById (String id);
 	
-	  @Query(value = "{'recommendationId' : ?0 }")
-	  public List<Score> findByRecommendationId(String recommendationId);
+	@Query(value = "{'recommendationId' : ?0 }")
+	public List<Score> findByRecommendationId(String recommendationId);
 
 }
