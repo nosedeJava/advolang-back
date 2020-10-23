@@ -39,7 +39,7 @@ public class UserController {
     /**
      * Method that allows to obtain the information related to a specific user.
      * @param username    Identifier of the user who wishes to subscribe, it is expected to be some kind of string that allows its identification.
-     * @return  Returns the requested information or an error code as the case may be.
+     * @return  Returns the requested information or an error code as the cse may be.
      */
     @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
     public ResponseEntity<?> getUser(@PathVariable("username") String username) {
