@@ -101,5 +101,15 @@ public class UserServiceImpl implements UserService {
         this.userRepository.save(user);
     }
 
+    @Override
+    public boolean isSavedThisRecommendation(String username, String recommendationId) throws UserNotFound {
+        // Confirmation of user's existence
+        User user = this.getUserByUsername(username);
+        // Confirmation if the recommendation has been saved
+        boolean hasBeenSaved = false;
+        if(user.getSavedRecommendations().contains(recommendationId)) hasBeenSaved = true;
+        return hasBeenSaved;
+    }
+
 }
 

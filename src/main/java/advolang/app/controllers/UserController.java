@@ -119,6 +119,23 @@ public class UserController {
         
     }
 
+    /**
+     * Method for determining whether a recommendation has been saved or not
+     * @param username	Identifier of a user in the system
+     * @param recommendationId	Identifier of a recommendation in the system
+     * @return	The boolean value that decides whether the recommendation has been saved or not
+     */
+    @RequestMapping(value = "/users/{username}/saved-recommendations/{recommendationId}", method = RequestMethod.GET)
+    public ResponseEntity<?> didUserSavedThisRecommendation(@PathVariable("username") String username, @PathVariable("recommendationId") String recommendationId) {
+        try {
+            boolean hasBeenSaved = userService.isSavedThisRecommendation(username, recommendationId);
+            return new ResponseEntity<>(hasBeenSaved, HttpStatus.OK);
+        } catch(UserNotFound userNotFound){
+            return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);
+        } catch(Exception e){
+            return new ResponseEntity<>("Error - Unexpected", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /**
      * Get the recommendations created by a specific user.
