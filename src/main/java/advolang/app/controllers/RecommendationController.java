@@ -75,7 +75,6 @@ public class RecommendationController {
             recommendationService.addRecommendation(recommendation);
             return new ResponseEntity<>("Created", HttpStatus.CREATED);
         } catch (Exception e) {
-            e.printStackTrace();
             return new ResponseEntity<>("Unexpected error", HttpStatus.BAD_REQUEST);
         }
     }
