@@ -37,10 +37,11 @@ public class User {
     @DBRef
     private Set<Role> roles = new HashSet<>();
 
-    public User(String fullName, String email, String username, String password) {
+    public User(String fullName, String email, String username, String password, String profileImage) {
         this.fullName = fullName;
         this.email = email;
         this.username = username;
         this.password = password;
+        this.profileImage = profileImage;
     }
 }
