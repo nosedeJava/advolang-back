@@ -22,4 +22,6 @@ public class SignupRequest {
     private String password;
     
     private String profileImage;
+
+    private String description;
 }
