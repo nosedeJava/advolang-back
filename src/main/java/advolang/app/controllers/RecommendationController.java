@@ -33,8 +33,15 @@ public class RecommendationController {
 	 * @return A list with all recommendations
 	 */
 	@RequestMapping(value = "/recommendations", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllRecommendations() {
+    public ResponseEntity<?> getAllRecommendations(
+                                @RequestParam(name = "categories", required = false) List<String> categories,
+                                @RequestParam(name = "title", required = false) String title,
+                                @RequestParam(name = "difficulty", required = false) String difficulty
+                                ) {
         try {
+            System.out.println(title);
+            System.out.println(difficulty);
+            System.out.println(categories);
             return new ResponseEntity<>(recommendationService.getAllRecommendations(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
