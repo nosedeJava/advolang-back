@@ -27,7 +27,7 @@ public class CategoryController {
      * @param category new category
      * @return A response with check status
      */
-    @PostMapping("/category")
+    @RequestMapping(value="/{language}/categories", method = RequestMethod.GET)
     public ResponseEntity<?> creteCategory(@RequestBody Category category){
         if (categoryRepository.existsByValue(category.getValue())){
             return new ResponseEntity<>("The category already exists", HttpStatus.FOUND);
@@ -41,7 +41,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/categoryList")
+    @RequestMapping(value="/{language}/categories", method = RequestMethod.GET)
     public ResponseEntity<?> getCategoryList(){
         try {
             return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.ACCEPTED);
