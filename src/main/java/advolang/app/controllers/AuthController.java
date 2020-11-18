@@ -59,6 +59,7 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
+    	
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -73,6 +74,9 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
+                userDetails.getEmail(),
+                userDetails.getFullname(),
+                userDetails.getProfileImage(),
                 roles));
     }
 
@@ -88,7 +92,9 @@ public class AuthController {
         User user = new User(signUpRequest.getFullName(),
                 signUpRequest.getEmail(),
                 signUpRequest.getUsername(),
-                encoder.encode(signUpRequest.getPassword()));
+                encoder.encode(signUpRequest.getPassword()),
+                signUpRequest.getProfileImage(),
+                signUpRequest.getDescription());
 
         Set<String> strRoles = signUpRequest.getRoles();
         Set<Role> roles = new HashSet<>();

@@ -62,6 +62,12 @@ public interface UserService {
      */
     public void removeSavedRecommendation(String userId, String recommendationId) throws UserNotFound, RecommendationNotFound;
 
-
+	/**
+	 * Method for determining whether a recommendation has been saved or not
+	 * @param username	Identifier of a user in the system
+	 * @param recommendationId	Identifier of a recommendation in the system
+	 * @return	The boolean value that decides whether the recommendation has been saved or not
+	 */
+	boolean isSavedThisRecommendation(String username, String recommendationId) throws UserNotFound;
 }
 

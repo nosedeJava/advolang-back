@@ -31,16 +31,20 @@ public class User {
     
     private String profileImage;
 
-    private List<Recommendation> savedRecommendations = new ArrayList<>();
+    private String description;
+
+    private List<String> savedRecommendations = new ArrayList<>();
 
     private List<String> subscriptions = new ArrayList<String>();
     @DBRef
     private Set<Role> roles = new HashSet<>();
 
-    public User(String fullName, String email, String username, String password) {
+    public User(String fullName, String email, String username, String password, String profileImage, String description) {
         this.fullName = fullName;
         this.email = email;
         this.username = username;
         this.password = password;
+        this.profileImage = profileImage;
+        this.description = description;
     }
 }

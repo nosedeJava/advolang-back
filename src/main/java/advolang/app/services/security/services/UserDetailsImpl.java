@@ -13,22 +13,32 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserDetailsImpl implements UserDetails {
+	
     private static final long serialVersionUID = 1L;
 
     private final String id;
 
     private final String username;
-
+    
     @JsonIgnore
     private final String password;
+    
+    private final String email;
+    
+    private final String fullname;
+    
+    private String profileImage;
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(String id, String username, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(String id, String username, String password, String email, 
+    		String fullname, String profileImage,  Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.fullname = fullname;
+        this.profileImage = profileImage;
         this.authorities = authorities;
     }
 
@@ -41,6 +51,9 @@ public class UserDetailsImpl implements UserDetails {
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
+                user.getEmail(),
+                user.getFullName(),
+                user.getProfileImage(),
                 authorities);
     }
 
@@ -53,7 +66,6 @@ public class UserDetailsImpl implements UserDetails {
         return id;
     }
 
-
     @Override
     public String getPassword() {
         return password;
@@ -62,6 +74,18 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public String getEmail() {
+		return this.email;
+	}
+    
+    public String getFullname() {
+        return this.fullname;
+    }
+    
+    public String getProfileImage() {
+        return this.profileImage;
     }
 
     @Override
@@ -93,4 +117,5 @@ public class UserDetailsImpl implements UserDetails {
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
+
 }

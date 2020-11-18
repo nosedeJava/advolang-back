@@ -39,7 +39,7 @@ public class UserController {
     /**
      * Method that allows to obtain the information related to a specific user.
      * @param username    Identifier of the user who wishes to subscribe, it is expected to be some kind of string that allows its identification.
-     * @return  Returns the requested information or an error code as the case may be.
+     * @return  Returns the requested information or an error code as the cse may be.
      */
     @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
     public ResponseEntity<?> getUser(@PathVariable("username") String username) {
@@ -119,6 +119,23 @@ public class UserController {
         
     }
 
+    /**
+     * Method for determining whether a recommendation has been saved or not
+     * @param username	Identifier of a user in the system
+     * @param recommendationId	Identifier of a recommendation in the system
+     * @return	The boolean value that decides whether the recommendation has been saved or not
+     */
+    @RequestMapping(value = "/users/{username}/saved-recommendations/{recommendationId}", method = RequestMethod.GET)
+    public ResponseEntity<?> didUserSavedThisRecommendation(@PathVariable("username") String username, @PathVariable("recommendationId") String recommendationId) {
+        try {
+            boolean hasBeenSaved = userService.isSavedThisRecommendation(username, recommendationId);
+            return new ResponseEntity<>(hasBeenSaved, HttpStatus.OK);
+        } catch(UserNotFound userNotFound){
+            return new ResponseEntity<>("Error - User not found", HttpStatus.NOT_FOUND);
+        } catch(Exception e){
+            return new ResponseEntity<>("Error - Unexpected", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /**
      * Get the recommendations created by a specific user.
