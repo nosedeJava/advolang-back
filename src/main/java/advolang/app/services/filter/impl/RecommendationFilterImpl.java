@@ -17,7 +17,7 @@ public class RecommendationFilterImpl implements RecommendationFilter {
             String difficulty) {
         List<Recommendation> filteredRecommendations = new ArrayList<Recommendation>();
         for (Recommendation recommendation : recommendations) {
-            if (difficulty != null && !recommendation.getLevel().equals(difficulty)){
+            if (difficulty != null && !difficulty.equals("Any") && !recommendation.getLevel().equals(difficulty)){
                 continue;
             }
             if (title != null && !recommendation.getTitle().contains(title)){
