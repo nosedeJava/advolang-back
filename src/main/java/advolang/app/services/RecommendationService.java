@@ -1,6 +1,7 @@
 package advolang.app.services;
 
 import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.exceptions.UserBadRequest;
 import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Recommendation;
 import advolang.app.models.Score;
@@ -83,5 +84,7 @@ public interface RecommendationService {
     Double getScoreOfRecommendation(String language, String recommendationId)  throws RecommendationNotFound;
 
     Double rateRecommendation(String language, String recommendationId, Score newScore) throws RecommendationNotFound, UserNotFound, Exception;
+
+	List<Recommendation> getFilterRecommendations(List<String> categories, String title, String difficulty, String type,String language, String user)  throws UserBadRequest,Exception;
 
 }

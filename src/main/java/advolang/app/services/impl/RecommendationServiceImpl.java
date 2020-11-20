@@ -1,6 +1,7 @@
 package advolang.app.services.impl;
 
 import advolang.app.exceptions.RecommendationNotFound;
+import advolang.app.exceptions.UserBadRequest;
 import advolang.app.exceptions.UserNotFound;
 import advolang.app.models.Category;
 import advolang.app.models.Recommendation;
@@ -11,6 +12,8 @@ import advolang.app.repository.RecomRepository;
 import advolang.app.repository.ScoreRepository;
 import advolang.app.repository.UserRepository;
 import advolang.app.services.RecommendationService;
+import advolang.app.services.UserService;
+import advolang.app.services.filter.RecommendationFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,12 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Autowired
     private ScoreRepository scoreRepository;
+
+    @Autowired
+    private RecommendationFilter recommendationFilter;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * When a recommendations is added, update to each category its popularity
@@ -172,6 +181,27 @@ public class RecommendationServiceImpl implements RecommendationService {
             scoreRepository.save(newScore);
         }
         return getScoreOfRecommendation(language, recommendationId);
+    }
+
+    @Override
+    public List<Recommendation> getFilterRecommendations(
+                        List<String> categories, 
+                        String title, 
+                        String difficulty, 
+                        String type, 
+                        String language,
+                        String username) throws UserBadRequest,Exception{
+        List<Recommendation> recommendations;
+        if(type.equals("saved")){
+            recommendations=userService.getSavedRecommendations(username);
+        }else if(type.equals("language") && language!=null){
+            recommendations=recomRepository.findByLanguage(language);
+        }else if(type.equals("principal")){
+            recommendations=recomRepository.findAll();
+        }else{
+            throw new UserBadRequest("Bad request");
+        }
+        return recommendationFilter.filter(recommendations,categories,title,difficulty);
     }
     
 }
