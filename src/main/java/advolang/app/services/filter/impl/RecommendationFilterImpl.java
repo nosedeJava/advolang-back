@@ -17,21 +17,30 @@ public class RecommendationFilterImpl implements RecommendationFilter {
             String difficulty) {
         List<Recommendation> filteredRecommendations = new ArrayList<Recommendation>();
         for (Recommendation recommendation : recommendations) {
-            if (!recommendation.getLevel().equals(difficulty))
+            if (difficulty != null && !recommendation.getLevel().equals(difficulty)){
                 continue;
-            if (!recommendation.getTitle().contains(title))
+            }
+            if (title != null && !recommendation.getTitle().contains(title)){
                 continue;
+            }
             boolean haveAllCategories = true;
             List<String> recommendationCategories = new ArrayList<String>();
             for (Category category : recommendation.getCategories()) {
                 recommendationCategories.add(category.getValue());
             }
-            for (String category : categories) {
-                if (!recommendationCategories.contains(category))
-                    haveAllCategories = haveAllCategories && false;
+            System.out.println(categories);
+            if (categories == null){
+                categories = new ArrayList<String>();
             }
-            if (!haveAllCategories)
+            System.out.println(categories);
+            for (String category : categories) {
+                if (!recommendationCategories.contains(category)){
+                    haveAllCategories = haveAllCategories && false;
+                }
+            }
+            if (!haveAllCategories){
                 continue;
+            }
             filteredRecommendations.add(recommendation);
         }
         return filteredRecommendations;
