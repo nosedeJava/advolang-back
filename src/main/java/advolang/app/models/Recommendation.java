@@ -20,29 +20,29 @@ import java.util.List;
 public class Recommendation {
 	
     @Id
-    private String id;
+    private String id="";
 
-    private String creator;
+    private String creator="";
     
-    private String title;
+    private String title="";
     
-    private String description;
+    private String description="";
 
-    private String language;
+    private String language="";
     
-    private String level;
+    private String level="";
 
-    private Date creationDate;
+    private Date creationDate=new Date();
 
-    private String thumbnail;
+    private String thumbnail="";
 
-    private String resource;
+    private String resource="";
 
-    private String resourceType;
+    private String resourceType="";
     
     private List<Category> categories = new ArrayList<>();
 
-    private Boolean reported;
+    private Boolean reported=false;
 
     public Recommendation(String creator, String title, String description, String language,
     		String level, Date creationDate, String thumbnail, Boolean reported) {
