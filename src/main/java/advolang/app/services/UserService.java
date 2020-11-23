@@ -36,8 +36,17 @@ public interface UserService {
 	 * @return The user if exists
 	 * @throws UserNotFound If the user does not exist
 	 */
-	User getUserByUsername(String username) throws UserNotFound;	
+	public User getUserByUsername(String username) throws UserNotFound;	
 
+	/**
+	 * Method to get user's subscriptions
+	 * @param username Username of user
+	 * @return A list with subscriptions of the given user
+	 * @throws UserNotFound Is user does not exist
+	 */
+	public List<String> getUserSubscriptions(String username) throws UserNotFound;
+	
+	
 	/**
 	 * Method to get all recommendations that a specific user have been save
 	 * @param username Id of the user
