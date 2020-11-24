@@ -57,6 +57,17 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+	@Override
+	public List<String> getUserSubscriptions(String username) throws UserNotFound {
+        Optional<User> user = this.userRepository.findByUsername(username);
+        try {
+            return user.get().getSubscriptions();
+        } catch (Exception e) {
+            throw new UserNotFound("Error - User not found");
+        }
+	}
+    
     @Override
     public List<Recommendation> getSavedRecommendations(String username) throws UserNotFound {
         // Confirmation of user's existence
@@ -109,6 +120,7 @@ public class UserServiceImpl implements UserService {
         if(user.getSavedRecommendations().contains(recommendationId)) hasBeenSaved = true;
         return hasBeenSaved;
     }
+
 
 }
 

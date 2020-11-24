@@ -43,6 +43,8 @@ public class Recommendation {
     private List<Category> categories = new ArrayList<>();
 
     private Boolean reported=false;
+    
+    private Boolean promo;
 
     public Recommendation(String creator, String title, String description, String language,
     		String level, Date creationDate, String thumbnail, Boolean reported) {
@@ -55,5 +57,6 @@ public class Recommendation {
     	this.creationDate = creationDate;
     	this.thumbnail = thumbnail;
     	this.categories = new ArrayList<Category>();
+    	this.promo = false;
     }
 }
