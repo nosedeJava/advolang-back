@@ -45,4 +45,40 @@ public class RecommendationFilterImpl implements RecommendationFilter {
         }
         return filteredRecommendations;
     }
+    
+    @Override
+    @SuppressWarnings("unlikely-arg-type")
+	public List<Recommendation> filterByCategories(List<Recommendation> allRecoms, List<Category> categories){
+    	
+    	List<Recommendation> recoms = new ArrayList<Recommendation>();
+    	for(Category c : categories) {
+    		String catValue = c.getValue().toLowerCase();
+    		for(Recommendation r : allRecoms) {
+    			
+    			List<Category> cats = r.getCategories();
+    			
+    			if (cats.contains(catValue) && !recoms.contains(r)) {
+    				recoms.add(r);
+    			}
+    		}
+    	}
+    	
+    	return recoms;
+    }
+    
+	@Override
+    public List<Recommendation> filterBySubs(List<Recommendation> allRecoms, List<String> subs){
+    	
+    	List<Recommendation> recoms = new ArrayList<Recommendation>();
+    	for(String s : subs) {
+    		for(Recommendation r : allRecoms) {
+    			if (r.getLanguage().equals(s) && !recoms.contains(r)) {
+    				recoms.add(r);
+    			}
+    		}
+    	}
+    	
+    	return recoms;
+    }
+
 }

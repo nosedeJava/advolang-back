@@ -87,4 +87,20 @@ public interface RecommendationService {
 
 	List<Recommendation> getFilterRecommendations(List<String> categories, String title, String difficulty, String type,String language, String user)  throws UserBadRequest,Exception;
 
+	/**
+	 * Method to get top n of recommendations
+	 * @param topNumber Number of top
+	 * @return List with recommendations
+	 * @throws RecommendationNotFound If the recommendation is not found
+	 */
+	List<Recommendation> getTopRecommendations(int topNumber) throws RecommendationNotFound;
+
+	/**
+	 * Method to filter recommendations by user info
+	 * @param username User 
+	 * @return List with recommendations
+	 * @throws UserNotFound Is user is not found
+	 */
+	List<Recommendation> filerRecomsForUser(String username) throws UserNotFound;
+
 }

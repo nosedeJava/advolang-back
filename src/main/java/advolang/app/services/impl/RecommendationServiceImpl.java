@@ -16,10 +16,20 @@ import advolang.app.services.UserService;
 import advolang.app.services.filter.RecommendationFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
@@ -204,4 +214,148 @@ public class RecommendationServiceImpl implements RecommendationService {
         return recommendationFilter.filter(recommendations,categories,title,difficulty);
     }
     
+    @Override
+    public List<Recommendation> getTopRecommendations(int topNumber) throws RecommendationNotFound{
+    	
+    	List<Recommendation> recommendations = this.recomRepository.findAll();
+    	List<Recommendation> topRecommendations = new ArrayList<Recommendation>();
+    	
+    	TreeMap<String, Recommendation> recomsDict = new TreeMap<String, Recommendation>();
+    	TreeMap<String, Double> recomsRate = new TreeMap<String, Double>();
+
+    	System.out.println(recommendations.size());
+    	for(int i=0; i<recommendations.size();i++) {
+    		
+    		Recommendation recom = recommendations.get(i);
+    		Double score = getScoreOfRecommendation(recom.getLanguage(), recom.getId());
+    		
+    		recomsDict.put(recom.getId(),recom);
+    		recomsRate.put(recom.getId(), score);
+    		
+    	}
+    	
+    	Map sortedMap = sortByValues(recomsRate);
+    	Set set = sortedMap.entrySet();
+     
+        Iterator i = set.iterator();
+     
+        int topListSize = 0;
+        while(i.hasNext() && topListSize<=topNumber) {
+          Map.Entry me = (Map.Entry)i.next();
+          
+          String recomId = (String) me.getKey();
+          topRecommendations.add(recomsDict.get(recomId));
+          topListSize++;
+        
+      }    	
+    	return topRecommendations;
+    }
+
+	/**
+	 * Descending order comparator
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @return
+	 */
+	private <K, V extends Comparable<V>> Map<K, V> sortByValues(final Map<K, V> map) {
+
+		Comparator<K> valueComparator = new Comparator<K>() {
+			public int compare(K k1, K k2) {
+				int compare = map.get(k2).compareTo(map.get(k1));
+				if (compare == 0)
+					return 1;
+				else
+					return compare;
+			}
+		};
+
+		Map<K, V> sortedByValues = new TreeMap<K, V>(valueComparator);
+		sortedByValues.putAll(map);
+		return sortedByValues;
+	}
+	
+	@Override
+	public List<Recommendation> filerRecomsForUser(String username) throws UserNotFound {
+        User user = this.userRepository.findByUsername(username).get();
+        
+        List<String> subscriptions = user.getSubscriptions();
+      
+        List<Recommendation> recommendations = this.recomRepository.findAll();
+        List<Recommendation> savedRecommendations = userService.getSavedRecommendations(username);
+    	List<Recommendation> recommendedPosts = new ArrayList<Recommendation>();
+    	
+        for(Recommendation recom : savedRecommendations) {
+        	removeRecomFromList(recommendations, recom);
+        	
+        	List<Category> categories = recom.getCategories();
+        	addRecomToList(recommendationFilter.filterByCategories(recommendations, categories), recommendedPosts);
+
+        	List<Recommendation> recomLanguage = this.recomRepository.findByLanguage(recom.getLanguage());
+        	addRecomToList(recomLanguage, recommendedPosts);
+        		
+        	List<Recommendation> recomCreator = this.recomRepository.findByCreator(recom.getCreator());
+        	addRecomToList(recomCreator, recommendedPosts);
+        }
+        
+        addRecomToList(recommendationFilter.filterBySubs(recommendations, subscriptions), recommendedPosts);
+        cleanRecomList(recommendedPosts, recommendations);
+        
+        return recommendedPosts;
+	}
+	
+	/**
+	 * Method to add list elements to another list
+	 * @param list List with elements to add
+	 * @param finalList Final list of elements
+	 */
+	private void addRecomToList(List<Recommendation> list, List<Recommendation> finalList) {
+		for(Recommendation r:list) {
+			if(!finalList.contains(r)) {
+				finalList.add(r);
+			}
+		}
+	}
+    
+	/**
+	 * Method to remove recommendation from list
+	 * @param list List to evaluate
+	 * @param recom Recommendation to delete
+	 */
+	private void removeRecomFromList(List<Recommendation> list, Recommendation recom) {
+		
+		int i=0;
+		boolean removed = false;
+		
+		while (i < list.size() && !removed) {
+			Recommendation r = list.get(i);
+			if(r.getId().equals(recom.getId())) {
+				list.remove(r);
+				removed=true;
+			}
+		}
+		i++;
+	}
+	
+	/**
+	 * Method to clean recommendation list
+	 * @param list pre-final recommendation list
+	 * @param validValues Valid values that final list can contain
+	 */
+	private void cleanRecomList(List<Recommendation> list, List<Recommendation> validValues) {
+		
+		Iterator i = list.iterator();
+	    Recommendation recom;
+	    
+	    while (i.hasNext()) {
+	    	recom = (Recommendation) i.next();
+	    	
+	    	if (!validValues.contains(recom)) {
+	    		if(recom.getPromo() == null || !recom.getPromo()) {
+	    			i.remove();
+	    		}
+	    		
+	         }
+	      }
+	}
 }
