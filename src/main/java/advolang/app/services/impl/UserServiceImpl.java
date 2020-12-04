@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
         if(user.getSavedRecommendations().contains(recommendationId)) hasBeenSaved = true;
         return hasBeenSaved;
     }
-
+    
 
 }
 

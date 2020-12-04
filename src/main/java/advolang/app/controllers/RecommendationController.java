@@ -252,4 +252,28 @@ public class RecommendationController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @RequestMapping(value = "/recommendations/{topNumber}", method = RequestMethod.GET)
+    public ResponseEntity<?> getTopRecommendations(@PathVariable("topNumber") Integer topNumber) {
+        try {
+            return new ResponseEntity<>(recommendationService.getTopRecommendations(topNumber), HttpStatus.OK);
+            
+        
+        } catch (Exception e) {
+        	e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @RequestMapping(value = "/recommendations/suggestion/{username}", method = RequestMethod.GET)
+    public ResponseEntity<?> getSuggestedRecommendations(@PathVariable("username") String username) {
+        try {
+            return new ResponseEntity<>(recommendationService.filerRecomsForUser(username), HttpStatus.OK);
+            
+        
+        } catch (Exception e) {
+        	e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
